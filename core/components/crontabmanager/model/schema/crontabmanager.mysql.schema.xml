@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model package="crontabmanager" baseClass="xPDOObject" platform="mysql" defaultEngine="InnoDB" phpdoc-package="crontabmanager"
+       version="1.1">
+
+    <object class="CronTabManagerTask" table="ctma_task" extends="xPDOSimpleObject">
+        <field key="createdon" dbtype="int" precision="20" phptype="timestamp" null="false" default="0"/>
+        <field key="updatedon" dbtype="int" precision="20" phptype="timestamp" null="false" default="0"/>
+        <field key="blockupdon" dbtype="datetime" phptype="datetime" null="false" default="0000-00-00 00:00:00" />
+        <field key="parent" dbtype="int" precision="10" phptype="integer"  null="true" default="0" />
+        <field key="path_task" dbtype="varchar" precision="256" phptype="string" null="false" default=""/>
+        <field key="last_run" dbtype="datetime" phptype="datetime" null="false" default="0000-00-00 00:00:00" />
+        <field key="end_run" dbtype="datetime" phptype="datetime" null="false" default="0000-00-00 00:00:00" />
+        <field key="completed" dbtype="tinyint" precision="1" phptype="boolean" null="true" default="0"/>
+        <field key="hash" dbtype="varchar" precision="10" phptype="string" null="false" default=""/>
+        <field key="minutes" dbtype="varchar" precision="10" phptype="string" null="false" default=""/>
+        <field key="hours" dbtype="varchar" precision="10" phptype="string" null="false" default=""/>
+        <field key="days" dbtype="varchar" precision="10" phptype="string" null="false" default=""/>
+        <field key="months" dbtype="varchar" precision="10" phptype="string" null="false" default=""/>
+        <field key="weeks" dbtype="varchar" precision="10" phptype="string" null="false" default=""/>
+        <field key="message" dbtype="text" phptype="string" null="true" />
+        <field key="description" dbtype="text" phptype="string" null="true" />
+        <field key="notification_emails" dbtype="varchar" precision="500" phptype="string" null="false" default=""/>
+        <field key="max_number_attempts" dbtype="int" precision="10" phptype="integer"  null="true" default="0" />
+        <field key="notification_enable" dbtype="tinyint" precision="1" phptype="boolean" null="true" default="1"/>
+        <field key="mode_develop" dbtype="tinyint" precision="1" phptype="boolean" null="true" default="0"/>
+        <field key="log_storage_time" dbtype="int" precision="10" phptype="integer" null="true" default="0" />
+
+        <field key="active" dbtype="tinyint" precision="1" phptype="boolean" null="true" default="1"/>
+
+        <index alias="createdon" name="createdon" primary="false" unique="false" type="BTREE">
+            <column key="createdon" length="" collation="A" null="false" />
+        </index>
+        <index alias="path_task" name="path_task" primary="false" unique="false" type="BTREE">
+            <column key="path_task" length="" collation="A" null="false" />
+        </index>
+        <index alias="active" name="active" primary="false" unique="false" type="BTREE">
+            <column key="active" length="" collation="A" null="false"/>
+        </index>
+
+        <aggregate alias="Category" class="CronTabManagerCategory" local="parent" foreign="id" cardinality="one" owner="foreign"/>
+        <composite alias="Logs" class="CronTabManagerTaskLog" local="id" foreign="task_id" cardinality="many" owner="local"/>
+    </object>
+
+
+    <object class="CronTabManagerCategory" table="ctma_categories" extends="xPDOSimpleObject">
+        <field key="name" dbtype="varchar" precision="255" phptype="string" null="false" default=""/>
+        <field key="description" dbtype="text" phptype="string" null="true" />
+        <field key="active" dbtype="tinyint" precision="1" phptype="boolean" null="true" default="1"/>
+
+        <index alias="active" name="active" primary="false" unique="false" type="BTREE">
+            <column key="active" length="" collation="A" null="false"/>
+        </index>
+    </object>
+
+
+
+    <object class="CronTabManagerTaskLog" table="ctma_task_log" extends="xPDOSimpleObject">
+
+        <field key="task_id" dbtype="int" precision="10" phptype="integer"  null="true" default="0" />
+        <field key="last_run" dbtype="int" precision="10" phptype="integer"  null="true" default="0" />
+        <field key="end_run" dbtype="int" precision="10" phptype="integer"  null="true" default="0" />
+
+        <field key="createdon" dbtype="int" precision="20" phptype="timestamp" null="false" default="0"/>
+        <field key="updatedon" dbtype="int" precision="20" phptype="timestamp" null="false" default="0"/>
+        <field key="completed" dbtype="tinyint" precision="1" phptype="boolean" null="true" default="0"/>
+        <field key="notification" dbtype="tinyint" precision="1" phptype="boolean" null="true" default="0"/>
+
+        <index alias="last_run" name="last_run" primary="false" unique="false" type="BTREE">
+            <column key="last_run" length="" collation="A" null="false"/>
+        </index>
+        <index alias="end_run" name="end_run" primary="false" unique="false" type="BTREE">
+            <column key="end_run" length="" collation="A" null="false"/>
+        </index>
+        <index alias="task_id" name="task_id" primary="false" unique="false" type="BTREE">
+            <column key="task_id" length="" collation="A" null="false"/>
+        </index>
+        <index alias="completed" name="completed" primary="false" unique="false" type="BTREE">
+            <column key="completed" length="" collation="A" null="false"/>
+        </index>
+        <index alias="notification" name="notification" primary="false" unique="false" type="BTREE">
+            <column key="notification" length="" collation="A" null="false"/>
+        </index>
+        <index alias="createdon" name="createdon" primary="false" unique="false" type="BTREE">
+            <column key="createdon" length="" collation="A" null="false"/>
+        </index>
+
+        <aggregate alias="Task" class="CronTabManagerTask" local="task_id" foreign="id" cardinality="one" owner="foreign"/>
+    </object>
+</model>
