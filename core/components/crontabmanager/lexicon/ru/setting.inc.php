@@ -9,6 +9,10 @@ $_lang['area_crontabmanager_blocking'] = 'Блокировки';
 $_lang['setting_crontabmanager_scheduler_path'] = 'Основная директория с классами';
 $_lang['setting_crontabmanager_scheduler_path_desc'] = 'Здесь храняться все классы';
 
+$_lang['setting_crontabmanager_handler_class'] = 'Обработчик сохраненых заданий';
+$_lang['setting_crontabmanager_handler_class_desc'] = 'По умолчанию CrontabManagerHandler будет сохранять задания в crontab(если у пользователя есть права). 	
+CrontabManagerHandlerFile будет сохранять в файл (после чего можно посмотреть список заданий)';
+
 $_lang['setting_crontabmanager_link_path'] = 'Директория ссылок на контроллеры';
 $_lang['setting_crontabmanager_link_path_desc'] = 'Директория хранения ссылок на контроллеры';
 

@@ -322,17 +322,21 @@ class SchedulerService
         $memory = round(memory_get_usage(true) / 1024 / 1024, 4) . ' Mb';
 
 
-        if ($this->ForcedStop) {
-            $out .= "<div>Forced stop, max_exec_time: {$this->getOption('max_exec_time')} s</div>";
+        if (isset($_GET['connector_base_path_url'])) {
+            $prefix = '<br>';
+        } else {
+            $prefix = PHP_EOL;
         }
 
-        $out .= "<div>Time all: {$exec_time}</div>";
-        $out .= "<div>Records process: {$this->recordsCount}</div>";
-        $out .= "<div>Memory: {$memory}</div>";
 
+        if ($this->ForcedStop) {
+            $out .= "Forced stop, max_exec_time: {$this->getOption('max_exec_time')} s".$prefix;
+        }
+        $out .= "Time all: {$exec_time}".$prefix;
+        $out .= "Records process: {$this->recordsCount}".$prefix;
+        $out .= "Memory: {$memory}".$prefix;
         $totalTime = (microtime(true) - $tstart);
         $totalTime = sprintf("%2.4f s", $totalTime);
-
         if (!empty($modx)) {
             $queryTime = $modx->queryTime;
             $queryTime = sprintf("%2.4f s", $queryTime);
@@ -340,18 +344,14 @@ class SchedulerService
 
             $phpTime = $totalTime - $queryTime;
             $phpTime = sprintf("%2.4f s", $phpTime);
-
-            $out .= "<div>queries: {$queries}</div>";
-
-            $out .= "<div>queryTime: {$queryTime}</div>";
-
-            $out .= "<div>phpTime: {$phpTime}</div>";
+            $out .= "queries: {$queries}".$prefix;
+            $out .= "queryTime: {$queryTime}".$prefix;
+            $out .= "phpTime: {$phpTime}".$prefix;
         }
-
-
-        $out .= "<div>TotalTime: {$totalTime}</div>";
+        $out .= "TotalTime: {$totalTime}".$prefix;
         return $out;
     }
+
 
 
     public function setMode()

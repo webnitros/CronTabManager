@@ -60,7 +60,7 @@ return [
 
     'handler_class' => [
         'xtype' => 'textfield',
-        'value' => 'CrontabManagerHandler',
+        'value' => 'CrontabManagerHandlerFile',
         'area' => 'crontabmanager_main',
     ],
 

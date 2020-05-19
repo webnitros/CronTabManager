@@ -132,7 +132,11 @@ abstract class modCrontabController
 
     protected function print_msg($msg)
     {
-        echo $msg . '<br>';
+        if (isset($_GET['connector_base_path_url'])) {
+            echo $msg . '<br>';
+        } else {
+            echo $msg . PHP_EOL;
+        }
     }
 
     /**

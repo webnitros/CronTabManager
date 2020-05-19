@@ -77,6 +77,7 @@ $_lang['crontabmanager_task_un_look'] = 'Task unlook';
 $_lang['crontabmanager_task_err_ae_controller'] = 'Не удалось найти файл контроллера по указанному пути: [[+controller]]';
 $_lang['crontabmanager_task_removeLog'] = 'Удалить лог файл crontab';
 $_lang['crontabmanager_task_removelog_confirm'] = 'Вы уверены что хотите удалить лог файл crontab?';
+$_lang['crontabmanager_time_server'] = 'Время на сервере';
 
 
 // Action
@@ -90,7 +91,7 @@ $_lang['crontabmanager_task_unlock'] = 'Снять блокировку';
 $_lang['crontabmanager_task_start'] = 'Запустить задание';
 $_lang['crontabmanager_task_unblockup'] = 'Сбросить время блокировки';
 $_lang['crontabmanager_task_readlog'] = 'Лог последнего запуска crontab';
-$_lang['crontabmanager_task_manualstop'] = 'Ручное прерываение задания';
+$_lang['crontabmanager_task_manualstop'] = 'Ручное прерывать задание';
 $_lang['crontabmanager_task_manualstop_confirm'] = 'Вы уверены что хотите в ручную остановить выполнение задания?';
 
 $_lang['crontabmanager_task_unblockup_confirm'] = 'Вы уверены, что хотите сбросить время на которое было заблокировано это Задание?';

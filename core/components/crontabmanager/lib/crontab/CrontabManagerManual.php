@@ -532,7 +532,8 @@ class CrontabManagerManual
     {
         $out = $this->_exec($this->_command() . ' -l', $retVal);
         if ($retVal != 0) {
-            throw new \UnexpectedValueException('No cron file or no permissions to list', $retVal);
+            // TODO не срабатывает при первом запуске
+            //throw new \UnexpectedValueException('No cron file or no permissions to list', $retVal);
         }
         return $out;
     }

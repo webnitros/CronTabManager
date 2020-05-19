@@ -133,27 +133,37 @@ Ext.extend(CronTabManager.grid.Tasks, CronTabManager.grid.Default, {
     },
 
     getTopBar: function (config) {
-        return [{
-            text: '<i class="icon icon-plus"></i>&nbsp;' + _('crontabmanager_task_create'),
-            handler: this.createItem,
-            scope: this
-        },{
-            text: '<i class="icon icon-plus"></i>&nbsp;' + _('crontabmanager_task_manualstop'),
-            handler: this.manualStopTask,
-            scope: this
-        }, {
+        return [
+           {
+            text: '<i class="icon icon-cogs"></i> Действия',
+                menu: [
+                    {
+                        tooltip: _('crontabmanager_task_create'),
+                        text: '<i class="icon icon-plus"></i>&nbsp;' + _('crontabmanager_task_create'),
+                        handler: this.createItem,
+                        scope: this
+                    },{
+                        text: '<i class="icon icon-plus"></i>&nbsp;' + _('crontabmanager_task_manualstop'),
+                        handler: this.manualStopTask,
+                        scope: this
+                    },
+                ]
+            },
+
+
+            {
             xtype: 'crontabmanager-combo-parent',
             id: config.id + '-parent',
             emptyText: _('crontabmanager_task_parent'),
             name: 'parent',
-            width: 300,
+            width: 200,
             listeners: {
                 select: {fn: this.fireParent, scope: this}
             }
         }, {
-            text: '<i class="icon icon-eye"></i>&nbsp;' + _('crontabmanager_show_crontabs') + ' <small>(Время на сервере: '+CronTabManager.config.time_server + ')</small>',
+            text: '<i class="icon icon-eye"></i>&nbsp;' + _('crontabmanager_show_crontabs') + ' <small>('+_('crontabmanager_time_server')+': '+CronTabManager.config.time_server + ')</small>',
             handler: this.ShowCrontabs,
-            scope: this
+            scope: this,
         }, '->', {
             xtype: 'xcheckbox',
             name: 'active',
@@ -165,7 +175,7 @@ Ext.extend(CronTabManager.grid.Tasks, CronTabManager.grid.Default, {
             listeners: {
                 check: {fn: this.activeFilter, scope: this}
             }
-        }, {
+        }/*, {
             xtype: 'xcheckbox',
             name: 'completed',
             id: config.id + '-completed',
@@ -176,7 +186,7 @@ Ext.extend(CronTabManager.grid.Tasks, CronTabManager.grid.Default, {
             listeners: {
                 check: {fn: this.completedFilter, scope: this}
             }
-        }, this.getSearchField()]
+        }*/, this.getSearchField()]
     },
 
     getListeners: function () {
