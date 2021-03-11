@@ -226,12 +226,12 @@ abstract class modCrontabController
     }
 
 
-
-
     /**
      * После обработки списка записей
      */
-    protected function afterPassingAllRecords(){}
+    protected function afterPassingAllRecords()
+    {
+    }
 
     /**
      * @param $message
@@ -490,5 +490,141 @@ abstract class modCrontabController
     public function getOption($key, $default = null)
     {
         return array_key_exists($key, $this->config) ? $this->config[$key] : $default;
+    }
+
+
+    protected $pdoFetch;
+
+    /**
+     * @param $file
+     * @param $params
+     * @return string
+     */
+    public function getChunk($file, $params)
+    {
+        if (is_null($this->pdoFetch)) {
+            /** @var pdoFetch $pdoFetch */
+            $fqn = $this->modx->getOption('pdoFetch.class', null, 'pdotools.pdofetch', true);
+            $path = $this->modx->getOption('pdofetch_class_path', null, MODX_CORE_PATH . 'components/pdotools/model/', true);
+            if ($pdoClass = $this->modx->loadClass($fqn, $path, false, true)) {
+                $this->pdoFetch = new $pdoClass($this->modx, array());
+            } else {
+                $this->pdoFetch = false;
+            }
+        }
+        if ($this->pdoFetch === false) {
+            return null;
+        }
+        return $this->pdoFetch->getChunk($file, $params);
+    }
+
+
+    /**
+     * Отправка сообщений на email
+     * @param $emails
+     * @param $subject
+     * @param $body
+     * @param array $files - список файлов которые нужно прицепить к письму (полный путь)
+     */
+    public function sendMessage($emails, $subject, $body, $files = [])
+    {
+        if (!empty($emails)) {
+            $emails = is_array($emails) ? $emails : explode(',', $emails);
+
+            $this->modx->getParser()->processElementTags('', $body, true, false, '[[', ']]', array(), 10);
+            $this->modx->getParser()->processElementTags('', $body, true, true, '[[', ']]', array(), 10);
+
+            /** @var modPHPMailer $mail */
+            $mail = $this->modx->getService('mail', 'mail.modPHPMailer');
+            $mail->setHTML(true);
+
+            $i = 0;
+            foreach ($emails as $email) {
+                $type = 'to';
+                #$type = $i == 0 ? 'to' : 'cc';
+                $mail->address($type, trim($email));
+                $i++;
+            }
+
+            $mail->set(modMail::MAIL_SUBJECT, trim($subject));
+            $mail->set(modMail::MAIL_BODY, $body);
+            $mail->set(modMail::MAIL_FROM, $this->modx->getOption('emailsender'));
+            $mail->set(modMail::MAIL_FROM_NAME, $this->modx->getOption('site_name'));
+
+            // Цеплят файлы к сообщению
+            if (is_array($files) and count($files) > 0) {
+                foreach ($files as $file) {
+                    $this->modx->mail->attach($file);
+                }
+            }
+
+            if (!$mail->send()) {
+                $this->modx->log(modX::LOG_LEVEL_ERROR,
+                    'An error occurred while trying to send the email: ' . $mail->mailer->ErrorInfo
+                );
+            }
+            $mail->reset();
+
+        }
+    }
+
+    /**
+     * Упаковка файла в zip архив
+     * @param $filename
+     * @param $path
+     * @param $source
+     * @return array|bool|string
+     */
+    public function packFile($source, $target)
+    {
+        if (empty($source)) {
+            return 'empty ' . $source;
+        }
+        if (!file_exists($source)) {
+            return 'file not exists' . $source;
+        }
+
+        if (empty($target)) {
+            return 'empty ' . $target;
+        }
+
+        $target_zip = dirname($source);
+
+        $xpdo = $this->modx;
+        $packed = false;
+        if (class_exists('ZipArchive', true) && $xpdo->loadClass('compression.xPDOZip', XPDO_CORE_PATH, true, true)) {
+            $archive = new xPDOZip($xpdo, $target, array(
+                xPDOZip::CREATE => true,
+                xPDOZip::OVERWRITE => true
+            ));
+            if ($archive) {
+                $packResults = $archive->pack("{$source}");
+
+                /*
+                Если использовать эту функцию то получи
+                $packResults = $archive->pack("{$source}", array(
+                     xPDOZip::ZIP_TARGET => "{$target_zip}/"
+                 ));
+                */
+                $archive->close();
+                if (!$archive->hasError() && !empty($packResults)) {
+                    $packed = true;
+                } else {
+                    $packed = $archive->getErrors();
+                }
+            }
+
+        } elseif (class_exists('PclZip') || include(XPDO_CORE_PATH . 'compression/pclzip.lib.php')) {
+            $archive = new PclZip($target);
+            if ($archive) {
+                $packResults = $archive->create("{$source}", PCLZIP_OPT_REMOVE_PATH, "{$target_zip}");
+                if ($packResults) {
+                    $packed = true;
+                } else {
+                    $packed = $archive->errorInfo($xpdo->getDebug() === true);
+                }
+            }
+        }
+        return $packed;
     }
 }

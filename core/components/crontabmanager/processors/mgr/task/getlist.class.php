@@ -55,6 +55,7 @@ class CronTabManagerTaskGetListProcessor extends modObjectGetListProcessor
         $c->select('Category.name as category_name');
 
         if ($query = $this->getProperty('query')) {
+            $query = trim($query);
             $c->where(array(
                 'message:LIKE' => '%' . $query . '%',
                 'OR:description:LIKE' => '%' . $query . '%',

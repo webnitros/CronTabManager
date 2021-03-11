@@ -81,6 +81,7 @@ class SchedulerService
         $this->setMode();
         if ($this->scheduler) {
 
+
             if ($controllerName = $this->getController()) {
 
                 if (null == $controllerName) {
@@ -507,4 +508,11 @@ class SchedulerService
 
     }
 
+    /**
+     * Велючаем выброс
+     */
+    public function enableEnabledException()
+    {
+        $this->enabledException = true;
+    }
 }

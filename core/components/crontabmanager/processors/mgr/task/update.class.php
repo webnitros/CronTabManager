@@ -27,17 +27,28 @@ class CronTabManagerTaskUpdateProcessor extends modObjectUpdateProcessor
      */
     public function beforeSet()
     {
+        $path_task_your = $this->setCheckbox('path_task_your');
         $path_task = trim($this->getProperty('path_task'));
         if (empty($path_task)) {
             return $this->modx->lexicon('crontabmanager_task_err_ns.path_task');
         }
 
 
-        $schedulerPath = $this->modx->getOption('crontabmanager_scheduler_path');
-        $controller = $schedulerPath . '/Controllers/' . $path_task;
-        if (!file_exists($controller)) {
-            $this->modx->error->addField('path_task', $this->modx->lexicon('crontabmanager_task_err_ae_controller', array('controller' => $controller)));
+        if (!$path_task_your) {
+            // Контроллер
+            $schedulerPath = $this->modx->getOption('crontabmanager_scheduler_path');
+            $controller = $schedulerPath . '/Controllers/' . $path_task;
+            if (!file_exists($controller)) {
+                $this->modx->error->addField('path_task', $this->modx->lexicon('crontabmanager_task_err_ae_controller', array('controller' => $controller)));
+            }
+        } else {
+            // Свой файл
+            if (!file_exists($path_task)) {
+                $this->modx->error->addField('path_task', $this->modx->lexicon('crontabmanager_task_year_err_ae_controller', array('controller' => $path_task)));
+            }
         }
+
+
 
         $send = $this->getProperty('status');
         if ($send == 1 or $send == 3) {

@@ -23,11 +23,22 @@ if (!$modx->hasPermission('crontabmanager_task_run')) {
     exit($modx->lexicon('access_denied'));
 }
 
-$path_link = $CronTabManager->config['linkPath'] . '/' . $task;
-if (!file_exists($path_link)) {
-    // Проверяем ссылку на контроллер. Если нету то генерируем новый
-    $scheduler->generateCronLink();
+/* @var CronTabManagerTask $ManagerTask */
+if (!$ManagerTask = $modx->getObject('CronTabManagerTask', ['path_task' => $task])) {
+    exit($modx->lexicon('Task not found ' . $task));
+
 }
+
+if ($ManagerTask->get('path_task_your')) {
+    $path_link = $task;
+} else {
+    $path_link = $CronTabManager->config['linkPath'] . '/' . $task;
+    if (!file_exists($path_link)) {
+        // Проверяем ссылку на контроллер. Если нету то генерируем новый
+        $scheduler->generateCronLink();
+    }
+}
+
 
 echo '<button class="crontabmanager-btn crontabmanager-btn-default icon icon-play" onclick="runTaskWindow()" title="Запустить задание"> <small >Перезапустить</small></button>';
 echo '<button class="crontabmanager-btn crontabmanager-btn-default icon icon-unlock" onclick="unlockTask()" title="Разблокировать"> <small>Разблокировать</small></button>';

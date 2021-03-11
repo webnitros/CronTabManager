@@ -11,8 +11,8 @@ if (!defined('MODX_CORE_PATH')) {
 return [
     'name' => 'CronTabManager',
     'name_lower' => 'crontabmanager',
-    'version' => '1.0.7',
-    'release' => 'beta',
+    'version' => '1.1.0',
+    'release' => 'pl',
     // Install package to site right after build
     'install' => true,
     'encryption_enable' => false,

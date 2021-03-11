@@ -219,6 +219,9 @@ class CronTabManagerTask extends xPDOSimpleObject
 
                                 $subject = $CronTabManager->modx->lexicon('crontabmanager_email_notifications_subject', $data);
                                 $message = $CronTabManager->modx->lexicon('crontabmanager_email_notifications_message', $data);
+                                if (!empty($this->get('message'))) {
+                                    $message = $this->get('message') . '<hr>' . $message;
+                                }
                                 $response = $CronTabManager->sendEmail($emails, $subject, $message);
                                 if (!$response['success']) {
                                     $CronTabManager->modx->log(xPDO::LOG_LEVEL_ERROR, "[CronTabManager] Error send email notofocation", '', __METHOD__, __FILE__, __LINE__);

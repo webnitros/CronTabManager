@@ -28,10 +28,11 @@ Ext.extend(CronTabManager.window.CreateTask, CronTabManager.window.Default, {
                     xtype: 'crontabmanager-grid-tasks-logs',
                     record: config.record,
                 }]
-            }/*, {
+            }, {
                 title: _('crontabmanager_task_setting'),
+                layout: 'form',
                 items: CronTabManager.window.CreateTask.prototype.getFieldsSetting.call(this, config),
-            }*/]
+            }]
         }];
     },
 
@@ -53,6 +54,14 @@ Ext.extend(CronTabManager.window.CreateTask, CronTabManager.window.Default, {
                 id: config.id + '-path_task',
                 anchor: '99%',
                 allowBlank: false,
+            },
+            {
+                xtype: 'xcheckbox',
+                boxLabel: _('crontabmanager_task_path_task_your'),
+                description: _('crontabmanager_task_path_task_your_desc'),
+                name: 'path_task_your',
+                id: config.id + '-path_task_your',
+                checked: true,
             },
             {
                 xtype: 'modx-description',
@@ -196,7 +205,7 @@ Ext.extend(CronTabManager.window.CreateTask, CronTabManager.window.Default, {
         ]
     },
 
-
+/*
     getFieldsSetting: function (config) {
         return [
             {
@@ -222,7 +231,23 @@ Ext.extend(CronTabManager.window.CreateTask, CronTabManager.window.Default, {
                 anchor: '99%'
             }
         ]
-    }
+    },
+*/
+
+    getFieldsSetting: function (config) {
+        return [
+            {
+                xtype: 'textarea',
+                height: 150,
+                fieldLabel: _('crontabmanager_task_message'),
+                description: _('crontabmanager_task_message_desc'),
+                name: 'message',
+                id: config.id + '-message',
+                anchor: '99%',
+            }
+        ]
+    },
+
 })
 Ext.reg('crontabmanager-task-window-create', CronTabManager.window.CreateTask)
 

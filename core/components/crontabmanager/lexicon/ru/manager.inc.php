@@ -14,20 +14,24 @@ $_lang['crontabmanager_grid_actions'] = 'Действия';
 $_lang['crontabmanager_task'] = 'Задание';
 $_lang['crontabmanager_task_log'] = 'Логи';
 $_lang['crontabmanager_task_setting'] = 'Настройки';
+$_lang['crontabmanager_task_tab_code'] = 'Свой код';
 
 # Taks
 
 $_lang['crontabmanager_tasks'] = 'Расписание крон';
 $_lang['crontabmanager_task_id'] = 'Id';
+$_lang['crontabmanager_task_path_task_your'] = 'Свой файл для исполнения';
+$_lang['crontabmanager_task_path_task_your_desc'] = 'Укажите абсолютный путь к файл который должен исполниться';
+$_lang['crontabmanager_task_message'] = 'Сообщение в письмо уведомления';
+$_lang['crontabmanager_task_message_desc'] = 'В начале письма с уведомлением добавиться это сообщение';
 $_lang['crontabmanager_task_name'] = 'Наименование';
 $_lang['crontabmanager_task_name_desc'] = 'Короткое наименование';
 $_lang['crontabmanager_task_createdon'] = 'Дата создания';
 $_lang['crontabmanager_task_updatedon'] = 'Дата обновления';
 $_lang['crontabmanager_task_date_start'] = 'Дата запуска';
 $_lang['crontabmanager_task_description'] = 'Описание задания';
-$_lang['crontabmanager_task_message'] = 'Сообщение';
 $_lang['crontabmanager_task_path_task'] = 'Путь к файлу';
-$_lang['crontabmanager_task_path_task_desc'] = '<em>Укажите путь к контроллеру в планировщика в виде: report/count.php. Все контроллеры расположены в: scheduler/Controllers/</em>';
+$_lang['crontabmanager_task_path_task_desc'] = '<em>Укажите путь к контроллеру в планировщик в виде: report/count.php. Все контроллеры расположены в: scheduler/Controllers/</em>';
 $_lang['crontabmanager_task_lock_file'] = 'Файл блокировки';
 $_lang['crontabmanager_task_last_run'] = 'Последний запуск';
 $_lang['crontabmanager_task_end_run'] = 'Завершен';
@@ -75,6 +79,7 @@ $_lang['crontabmanager_task_log_createdon'] = 'Создан';
 $_lang['crontabmanager_task_log_updatedon'] = 'Обновлен';
 $_lang['crontabmanager_task_un_look'] = 'Task unlook';
 $_lang['crontabmanager_task_err_ae_controller'] = 'Не удалось найти файл контроллера по указанному пути: [[+controller]]';
+$_lang['crontabmanager_task_year_err_ae_controller'] = 'Не удалось найти файл контроллера по указанному пути: [[+controller]]. Вы используете собственный путь к контроллеру по этому нужно добавить абсолютный путь до файла';
 $_lang['crontabmanager_task_removeLog'] = 'Удалить лог файл crontab';
 $_lang['crontabmanager_task_removelog_confirm'] = 'Вы уверены что хотите удалить лог файл crontab?';
 $_lang['crontabmanager_time_server'] = 'Время на сервере';

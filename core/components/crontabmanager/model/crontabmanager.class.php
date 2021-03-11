@@ -114,8 +114,18 @@ class CronTabManager
         $this->createDirs();
         $config = array_merge($this->config, $config);
         $this->modx->setOption('log_deprecated', false);
-        include $this->config['scheduler'] . 'schedulerservice.class.php';
-        include $this->config['scheduler'] . 'modcrontabcontrollerinterface.class.php';
+        if (!class_exists('SchedulerService')) {
+            include $this->config['scheduler'] . 'schedulerservice.class.php';
+        }
+
+        if (!class_exists('modCrontabController')) {
+            include $this->config['scheduler'] . 'modcrontabcontrollerinterface.class.php';
+        }
+
+        if (!class_exists('modCrontabControllerPhpUnit')) {
+            include $this->config['scheduler'] . 'modcrontabcontrollerphpunitabstract.class.php';
+        }
+
         $scheduler = new SchedulerService($this,
             array_merge($config, array(
                 'basePath' => $this->config['schedulerPath'] . '/Controllers/',
