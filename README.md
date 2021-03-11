@@ -6,21 +6,19 @@
 
 Для работы необходимо чтобы на хостинге был доступ к функциями:  system и passthru для запуска из под php
 
-
-
 ### Добавление phpunit тестов
 
 ```bash
 composer install
 ```
 
-Установка phpunit 
+Установка phpunit
 
 ```bash
 composer require --dev phpunit/phpunit ^latest
 ```
 
-Создаем файл с названием в корне сайта tests/DemoTest.php
+Создаем файл с названием в корне сайта **tests/DemoTest.php**
 
 ```php
 <?php
@@ -40,6 +38,31 @@ class DemoTest extends MODxProcessorTestCase
 }
 ```
 
+Создаем контроллер **core/scheduler/Controllers/demophpunit.php**
+
+```php
+<?php
+use PHPUnit\Framework\TestSuite;
+
+/**
+ * Демонстрация контроллера
+ */
+class CrontabControllerDemoPhpUnit extends modCrontabControllerPhpUnit
+{
+
+    public function process()
+    {
+        $response = $this->runTest('DemoTest');
+        echo '<pre>';
+        print_r($response);
+        die;
+    }
+}
+```
+
+После добавляем заадание в crontab менеджер и запускаем его
+
+https://file.modx.pro/files/e/5/c/e5cb48ccffaeef677442972630484d8f.png
 
 ### Запуск из консоли
 
