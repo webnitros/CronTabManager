@@ -6,12 +6,7 @@
 
 Для работы необходимо чтобы на хостинге был доступ к функциями:  system и passthru для запуска из под php
 
-А так же доступ к задания crontab
-https://proselyte.net/tutorials/junit/api/
 
-```bash
-./vendor/bin/phpunit --filter fdkOrderTest tests/order/fdkOrderTest.php --bootstrap tests/MODxTestHarness.php  --testdox
-```
 
 ### Добавление phpunit тестов
 
@@ -43,4 +38,11 @@ class DemoTest extends MODxProcessorTestCase
         $this->assertTrue($test, '"success with custom message"');
     }
 }
+```
+
+
+### Запуск из консоли
+
+```bash
+./vendor/bin/phpunit --filter DemoTest tests/DemoTest.php --bootstrap core/components/crontabmanager/lib/phpunit/MODxTestHarness.php  --testdox
 ```
