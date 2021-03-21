@@ -2,12 +2,6 @@
 
 abstract class MODxProcessorTestCase extends MODxTestCase
 {
-    public function tearDown(): void
-    {
-        parent::tearDown();
-    }
-
-
     /* @var GuzzleHttp\Psr7\Response $rest */
     public $rest = null;
     public $body = null;
@@ -65,6 +59,7 @@ abstract class MODxProcessorTestCase extends MODxTestCase
      */
     public function runTask($task_id, $checkEnable = false)
     {
+
         /* @var CronTabManagerTask $Task */
         $Task = $this->modx->getObject('CronTabManagerTask', $task_id);
         self::assertInstanceOf('CronTabManagerTask', $Task);
@@ -102,5 +97,6 @@ abstract class MODxProcessorTestCase extends MODxTestCase
             }
         }
     }
+
 
 }

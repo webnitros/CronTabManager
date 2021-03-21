@@ -40,7 +40,7 @@ CronTabManager.grid.Tasks = function (config) {
 Ext.extend(CronTabManager.grid.Tasks, CronTabManager.grid.Default, {
 
     getFields: function (config) {
-        return ['id', 'description', 'message', 'createdon','completed','updatedon', 'status','is_blocked_time','is_blocked', 'max_number_attempts', 'parent', 'time', 'path_task', 'last_run', 'category_name', 'end_run', 'active', 'actions']
+        return ['id', 'description', 'message', 'createdon', 'completed', 'updatedon', 'add_output_email', 'mode_develop', 'status', 'is_blocked_time', 'is_blocked', 'max_number_attempts', 'parent', 'time', 'path_task', 'last_run', 'category_name', 'end_run', 'active', 'actions']
     },
 
     getColumns: function (config) {
@@ -98,6 +98,12 @@ Ext.extend(CronTabManager.grid.Tasks, CronTabManager.grid.Default, {
             width: 70,
             renderer: CronTabManager.utils.renderBoolean,
         }, {
+            header: _('crontabmanager_task_add_output_email'),
+            dataIndex: 'add_output_email',
+            sortable: true,
+            width: 70,
+            renderer: CronTabManager.utils.renderBoolean,
+        }, {
             header: _('crontabmanager_task_max_number_attempts'),
             dataIndex: 'max_number_attempts',
             sortable: true,
@@ -134,15 +140,15 @@ Ext.extend(CronTabManager.grid.Tasks, CronTabManager.grid.Default, {
 
     getTopBar: function (config) {
         return [
-           {
-            text: '<i class="icon icon-cogs"></i> Действия',
+            {
+                text: '<i class="icon icon-cogs"></i> Действия',
                 menu: [
                     {
                         tooltip: _('crontabmanager_task_create'),
                         text: '<i class="icon icon-plus"></i>&nbsp;' + _('crontabmanager_task_create'),
                         handler: this.createItem,
                         scope: this
-                    },{
+                    }, {
                         text: '<i class="icon icon-plus"></i>&nbsp;' + _('crontabmanager_task_manualstop'),
                         handler: this.manualStopTask,
                         scope: this
@@ -150,32 +156,31 @@ Ext.extend(CronTabManager.grid.Tasks, CronTabManager.grid.Default, {
                 ]
             },
 
-
             {
-            xtype: 'crontabmanager-combo-parent',
-            id: config.id + '-parent',
-            emptyText: _('crontabmanager_task_parent'),
-            name: 'parent',
-            width: 200,
-            listeners: {
-                select: {fn: this.fireParent, scope: this}
-            }
-        }, {
-            text: '<i class="icon icon-eye"></i>&nbsp;' + _('crontabmanager_show_crontabs') + ' <small>('+_('crontabmanager_time_server')+': '+CronTabManager.config.time_server + ')</small>',
-            handler: this.ShowCrontabs,
-            scope: this,
-        }, '->', {
-            xtype: 'xcheckbox',
-            name: 'active',
-            id: config.id + '-active',
-            width: 130,
-            boxLabel: _('crontabmanager_task_filter_active'),
-            ctCls: 'tbar-checkbox',
-            checked: true,
-            listeners: {
-                check: {fn: this.activeFilter, scope: this}
-            }
-        }/*, {
+                xtype: 'crontabmanager-combo-parent',
+                id: config.id + '-parent',
+                emptyText: _('crontabmanager_task_parent'),
+                name: 'parent',
+                width: 200,
+                listeners: {
+                    select: {fn: this.fireParent, scope: this}
+                }
+            }, {
+                text: '<i class="icon icon-eye"></i>&nbsp;' + _('crontabmanager_show_crontabs') + ' <small>(' + _('crontabmanager_time_server') + ': ' + CronTabManager.config.time_server + ')</small>',
+                handler: this.ShowCrontabs,
+                scope: this,
+            }, '->', {
+                xtype: 'xcheckbox',
+                name: 'active',
+                id: config.id + '-active',
+                width: 130,
+                boxLabel: _('crontabmanager_task_filter_active'),
+                ctCls: 'tbar-checkbox',
+                checked: true,
+                listeners: {
+                    check: {fn: this.activeFilter, scope: this}
+                }
+            }/*, {
             xtype: 'xcheckbox',
             name: 'completed',
             id: config.id + '-completed',
@@ -222,13 +227,11 @@ Ext.extend(CronTabManager.grid.Tasks, CronTabManager.grid.Default, {
         this.getStore().baseParams.active = 1
         this.getStore().baseParams.completed = 0
 
-
         var active = Ext.getCmp('crontabmanager-grid-tasks-active')
         active.setValue(1)
 
         var completed = Ext.getCmp('crontabmanager-grid-tasks-completed')
         completed.setValue(0)
-
 
         var parent = Ext.getCmp('crontabmanager-grid-tasks-parent')
         parent.setValue('')
@@ -254,10 +257,9 @@ Ext.extend(CronTabManager.grid.Tasks, CronTabManager.grid.Default, {
         w.show(e.target)
     },
     updateItem: function (btn, e, row) {
-        if (typeof(row) != 'undefined') {
+        if (typeof (row) != 'undefined') {
             this.menu.record = row.data
-        }
-        else if (!this.menu.record) {
+        } else if (!this.menu.record) {
             return false
         }
         var id = this.menu.record.id
@@ -295,42 +297,42 @@ Ext.extend(CronTabManager.grid.Tasks, CronTabManager.grid.Default, {
         this.processors.multiple('enable')
     },
     removeItem: function () {
-        this.processors.confirm('remove','task_remove')
+        this.processors.confirm('remove', 'task_remove')
     },
     disableItem: function (grid, row, e) {
         this.processors.multiple('disable')
     },
     unlockTask: function (act, btn, e) {
-        this.processors.confirm('unlock','task_unlock')
+        this.processors.confirm('unlock', 'task_unlock')
     },
     unblockupTask: function (act, btn, e) {
-        this.processors.confirm('unblockup','task_unblockup', {multiple: false})
+        this.processors.confirm('unblockup', 'task_unblockup', {multiple: false})
     },
 
     readLog: function (act, btn, e) {
         if (this.win !== null) {
-            this.win.destroy();
+            this.win.destroy()
         }
         this.win = new Ext.Window({
             id: this.config.id + 'readlog'
-            , title : 'Task crontab: '+this.menu.record.path_task
-            , width : 900
+            , title: 'Task crontab: ' + this.menu.record.path_task
+            , width: 900
             , height: 550
-            , layout: "fit"
+            , layout: 'fit'
             , autoLoad: {
-                url : CronTabManager.config['connector_url']+'?action=mgr/task/readlog&id='+this.menu.record.id,
-                scripts : true
+                url: CronTabManager.config['connector_url'] + '?action=mgr/task/readlog&id=' + this.menu.record.id,
+                scripts: true
             }
-        });
-        this.win.show();
+        })
+        this.win.show()
     },
 
     removeLog: function (act, btn, e) {
-        this.processors.confirm('removelog','task_removelog', {multiple: false})
+        this.processors.confirm('removelog', 'task_removelog', {multiple: false})
     },
 
     manualStopTask: function (act, btn, e) {
-        this.processors.confirm('manualstop','task_manualstop', {multiple: false})
+        this.processors.confirm('manualstop', 'task_manualstop', {multiple: false})
     },
 
     win: null,
@@ -341,6 +343,7 @@ Ext.extend(CronTabManager.grid.Tasks, CronTabManager.grid.Default, {
         if (this.win !== null) {
             this.win.destroy()
         }
+        this.elementLog = false
         this.win = new Ext.Window({
             id: this.config.id + 'runtask'
             , title: this.menu.record.path_task
@@ -348,11 +351,12 @@ Ext.extend(CronTabManager.grid.Tasks, CronTabManager.grid.Default, {
             , height: 450
             , layout: 'fit'
             , autoLoad: {
-                url: CronTabManager.config['connector_cron_url'] + '?path_task=' + this.menu.record.path_task + '&scheduler_path=' + CronTabManager.config.schedulerPath+ '&connector_base_path_url=' + CronTabManager.config.schedulerPath,
+                url: CronTabManager.config['connector_cron_url'] + '?path_task=' + this.menu.record.path_task + '&scheduler_path=' + CronTabManager.config.schedulerPath + '&connector_base_path_url=' + CronTabManager.config.schedulerPath,
                 scripts: true
             }
         })
         this.win.show()
+
     },
 
     ShowCrontabs: function () {
@@ -372,6 +376,57 @@ Ext.extend(CronTabManager.grid.Tasks, CronTabManager.grid.Default, {
         })
         this.win.show()
     },
+
+    readLogFile: function (btn, e, row) {
+        if (typeof (row) != 'undefined') {
+            this.menu.record = row.data
+        } else if (!this.menu.record) {
+            return false
+        }
+        this.readLogFileBody(this.menu.record)
+    },
+
+    elementLog:  false,
+    readLogFileBody: function (record) {
+
+        if (!this.elementLog) {
+            var $win = this.win;
+            var wrapper = document.createElement("div")
+            wrapper.setAttribute("id", 'crontabmanager_area_reading')
+            $win.body.dom.appendChild(wrapper)
+
+
+            this.elementLog = true
+        }
+
+        //<div class="loading-indicator">Loading...</div>
+        this.setLogFile('<div class="loading-indicator">Loading...</div>')
+
+
+        MODx.Ajax.request({
+            url: CronTabManager.config['connector_url'],
+            params: {
+                action: 'mgr/task/readlog',
+                id: record.id,
+                return: true,
+            },
+            listeners: {
+                success: {
+                    fn: function (r) {
+                        var log = r.object.yesLog ? r.object.content : r.message
+                        this.setLogFile(log)
+                    }, scope: this
+                }
+            }
+        })
+
+    },
+
+    setLogFile: function (content){
+        var area = document.getElementById('crontabmanager_area_reading')
+        area.innerHTML = '<hr>'+content
+    }
+
 })
 Ext.reg('crontabmanager-grid-tasks', CronTabManager.grid.Tasks)
 
@@ -379,7 +434,13 @@ function runTaskWindow () {
     var Tasks = Ext.getCmp('crontabmanager-grid-tasks')
     Tasks.runTaskWindow()
 }
+
 function unlockTask () {
     var Tasks = Ext.getCmp('crontabmanager-grid-tasks')
     Tasks.processors.confirm('unlock', 'task_unlock')
+}
+
+function readLogFileBody () {
+    var Tasks = Ext.getCmp('crontabmanager-grid-tasks')
+    Tasks.readLogFile()
 }

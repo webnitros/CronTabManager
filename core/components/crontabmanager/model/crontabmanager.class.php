@@ -122,10 +122,6 @@ class CronTabManager
             include $this->config['scheduler'] . 'modcrontabcontrollerinterface.class.php';
         }
 
-        if (!class_exists('modCrontabControllerPhpUnit')) {
-            include $this->config['scheduler'] . 'modcrontabcontrollerphpunitabstract.class.php';
-        }
-
         $scheduler = new SchedulerService($this,
             array_merge($config, array(
                 'basePath' => $this->config['schedulerPath'] . '/Controllers/',

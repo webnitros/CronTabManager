@@ -138,6 +138,8 @@ class SchedulerService
 
     /**
      * Получение задания и проверка блокировки
+     * @return CronTabManagerTask|object|null
+     * @throws Exception
      */
     public function getTask()
     {

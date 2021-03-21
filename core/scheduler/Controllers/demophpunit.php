@@ -5,14 +5,21 @@ use PHPUnit\Framework\TestSuite;
 /**
  * Демонстрация контроллера
  */
-class CrontabControllerDemoPhpUnit extends modCrontabControllerPhpUnit
+class CrontabControllerDemoPhpUnit extends modCrontabController
 {
 
-    public function process()
+    public function run()
     {
-        $response = $this->runTest('order/OrderTest');
-        echo '<pre>';
-        print_r($response);
-        die;
+
+        // Запуск тестов в директории /tests/minishop2/ - запустить все тесты в этой директории
+        $this->addTest('minishop2');
+
+        // Запуск тестов в директории /tests/mini/Setting.php - запустить все тесты в этой папке
+        $this->addTest('mini/Setting');
+
+        // Запустит тест из файла tests/DemoTest.php
+        $this->addTest('DemoTest');
+
+        $this->runTest();
     }
 }

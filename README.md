@@ -69,3 +69,7 @@ https://file.modx.pro/files/e/5/c/e5cb48ccffaeef677442972630484d8f.png
 ```bash
 ./vendor/bin/phpunit --filter DemoTest tests/DemoTest.php --bootstrap core/components/crontabmanager/lib/phpunit/MODxTestHarness.php  --testdox
 ```
+
+
+Схема работы 
+https://github.com/sebastianbergmann/phpunit/issues/3213

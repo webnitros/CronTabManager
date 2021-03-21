@@ -22,6 +22,7 @@
  *
  */
 
+
 /**
  * Abstract controller class for modRestService; all REST controllers must extend this class to be properly
  * implemented.
@@ -96,6 +97,18 @@ abstract class modCrontabController
         }
     }
 
+    protected $start_timer;
+
+    public function timerStart()
+    {
+        $this->start_timer = microtime(true);
+    }
+
+    public function timerEnd($id)
+    {
+        $time_str = round(microtime(true) - $this->start_timer, 4) . ' сек.';
+        $this->print_msg("[{$id}] {$this->service->recordsCount}/" . $this->total . ' time: ' . $time_str);
+    }
 
     protected $listDeleted = null;
 
@@ -626,5 +639,63 @@ abstract class modCrontabController
             }
         }
         return $packed;
+    }
+
+    private $tests = null;
+
+    public function addtest($pathName)
+    {
+        $this->tests[] = $pathName;
+    }
+
+    protected function runTest(array $args = [], $escape = true)
+    {
+        /* @var $taks */
+        $taks = $this->service->getTask();
+        $args['tests'] = implode(',', $this->tests);
+        $args['task'] = $taks->get('id');
+
+        $path_log = $taks->getFileLogPath();
+        return $this->exec_bg_script('scheduler/phpunit.php', $args, $escape, $path_log);
+    }
+
+    private function exec_bg_script($script, array $args = [], $escape = true, $pathLog = null)
+    {
+
+        $script = str_replace('..', '', $script);
+        $script = (strpos($script, MODX_CORE_PATH) === false) ? MODX_CORE_PATH . $script : $script;
+        if (($file = realpath($script)) === false) {
+            $this->modx->log(modX::LOG_LEVEL_ERROR, '[exec_bg_script] File ' . $script . ' not found!', '', __METHOD__, __FILE__, __LINE__);
+            return false;
+        }
+
+        array_walk($args, function (&$value, $key) use ($escape) {
+            $value = $escape ? $key . '=' . escapeshellarg($value) : $key . '=' . $value;
+        });
+        $php_command = $this->modx->getOption('crontabmanager_php_command');
+        $command = sprintf($php_command . ' %s %s', $file, implode(' ', $args));
+        #$command = sprintf('/opt/php73/bin/php %s %s', $file, implode(' ', $args));
+        if (substr(php_uname(), 0, 7) == "Windows") {
+            pclose(popen("start /B " . $command, "r"));
+        } else {
+
+            if (function_exists('exec')) {
+                // Пишем логи в путь с логами
+                if ($pathLog) {
+                    exec($command . " > " . $pathLog . ' &');
+                } else {
+                    exec($command . " > /dev/null &");
+                }
+            } else {
+                $this->modx->log(modX::LOG_LEVEL_ERROR, '[exec_bg_script] Function not found "exec"!', '', __METHOD__, __FILE__, __LINE__);
+                return false;
+            }
+        }
+
+        $this->print_msg('Run PhpUnit Test');
+        foreach ($this->tests as $arg) {
+            $this->print_msg('--- '.$arg);
+        }
+        exit('');
     }
 }

@@ -7,6 +7,7 @@ error_reporting(E_ALL);
 $task = preg_replace('/[^a-zA-Z0-9\-\._]/', '/', $_REQUEST['path_task']);
 $scheduler_path = preg_replace('/[^a-zA-Z0-9\-\._]/', '/', $_REQUEST['scheduler_path']);
 
+#sleep(60);
 
 if (!file_exists($scheduler_path)) {
     exit('Контроллер не найден');
@@ -42,6 +43,7 @@ if ($ManagerTask->get('path_task_your')) {
 
 echo '<button class="crontabmanager-btn crontabmanager-btn-default icon icon-play" onclick="runTaskWindow()" title="Запустить задание"> <small >Перезапустить</small></button>';
 echo '<button class="crontabmanager-btn crontabmanager-btn-default icon icon-unlock" onclick="unlockTask()" title="Разблокировать"> <small>Разблокировать</small></button>';
+echo '<button class="crontabmanager-btn crontabmanager-btn-default icon icon-eye" onclick="readLogFileBody()" title="Читать лог файл"> <small>Читать лог файл</small></button>';
 echo '<hr>';
 $scheduler->php(str_ireplace('.php', '', $task));
 $scheduler->process();

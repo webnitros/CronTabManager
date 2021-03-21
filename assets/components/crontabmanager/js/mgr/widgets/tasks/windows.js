@@ -56,14 +56,6 @@ Ext.extend(CronTabManager.window.CreateTask, CronTabManager.window.Default, {
                 allowBlank: false,
             },
             {
-                xtype: 'xcheckbox',
-                boxLabel: _('crontabmanager_task_path_task_your'),
-                description: _('crontabmanager_task_path_task_your_desc'),
-                name: 'path_task_your',
-                id: config.id + '-path_task_your',
-                checked: true,
-            },
-            {
                 xtype: 'modx-description',
                 style: 'margin-top: 8px;',
                 html: _('crontabmanager_task_path_task_desc'),
@@ -184,6 +176,13 @@ Ext.extend(CronTabManager.window.CreateTask, CronTabManager.window.Default, {
                 boxLabel: _('crontabmanager_task_notification_enable'),
                 name: 'notification_enable',
                 id: config.id + '-notification_enable',
+                checked: true,
+            },{
+                xtype: 'xcheckbox',
+                boxLabel: _('crontabmanager_task_add_output_email'),
+                description: _('crontabmanager_task_add_output_email_desc'),
+                name: 'add_output_email',
+                id: config.id + '-add_output_email',
                 checked: true,
             }, {
                 xtype: 'textfield',

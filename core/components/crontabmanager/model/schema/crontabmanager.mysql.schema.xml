@@ -11,6 +11,7 @@
         <field key="last_run" dbtype="datetime" phptype="datetime" null="false" default="0000-00-00 00:00:00" />
         <field key="end_run" dbtype="datetime" phptype="datetime" null="false" default="0000-00-00 00:00:00" />
         <field key="completed" dbtype="tinyint" precision="1" phptype="boolean" null="true" default="0"/>
+        <field key="add_output_email" dbtype="tinyint" precision="1" phptype="boolean" null="true" default="0"/>
         <field key="hash" dbtype="varchar" precision="10" phptype="string" null="false" default=""/>
         <field key="minutes" dbtype="varchar" precision="10" phptype="string" null="false" default=""/>
         <field key="hours" dbtype="varchar" precision="10" phptype="string" null="false" default=""/>

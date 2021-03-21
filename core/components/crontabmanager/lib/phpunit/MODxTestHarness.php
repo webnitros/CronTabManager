@@ -23,6 +23,8 @@
  */
 require_once dirname(__FILE__) . '/MODxTestCase.php';
 require_once dirname(__FILE__) . '/MODxProcessorTestCase.php';
+require_once dirname(__FILE__) . '/MODxTestResult.php';
+require_once dirname(__FILE__) . '/MODxTestSuite.php';
 
 /**
  * Main MODX test harness.
@@ -61,11 +63,8 @@ class MODxTestHarness
         } else {
             $properties = array();
 
-            if (!class_exists('modX')) {
-                include_once dirname(dirname(dirname(dirname(dirname(__FILE__))))) . '/model/modx/modx.class.php';
-                @include(dirname(dirname(dirname(dirname(dirname(dirname(__FILE__)))))) . '/config.core.php');
-            }
-
+            include_once dirname(dirname(dirname(dirname(dirname(__FILE__))))) . '/model/modx/modx.class.php';
+            #@include(dirname(dirname(dirname(dirname(dirname(dirname(__FILE__)))))) . '/config.core.php');
 
             $properties['runtime'] = strftime("%Y%m%dT%H%M%S");
             self::$properties['logLevel'] = modX::LOG_LEVEL_INFO;
@@ -128,10 +127,6 @@ class MODxTestHarness
                         $fixture->getParser();
                         $fixture->request->loadErrorHandler();
                     }
-                    /* @var CronTabManager $CronTabManager */
-                    $fixture->getService('crontabmanager', 'CronTabManager', MODX_CORE_PATH . 'components/crontabmanager/model/');
-
-
                     break;
                 default:
                     $fixture = new $class($options);

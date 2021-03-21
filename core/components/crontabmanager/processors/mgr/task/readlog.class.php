@@ -24,10 +24,15 @@ class CronTabManagerTaskGetProcessor extends modObjectGetProcessor
             return $this->failure($this->modx->lexicon('access_denied'));
         }
 
-        $content = $this->object->readLogFile();
-        $content = nl2br($content);
-        exit($content);
-        return parent::process();
+        $content = $this->object->readLogFileFormat();
+        $yesLog = !empty($content);
+        $return = $this->getProperty('return', false);
+        if (!$return) {
+            exit($content);
+        } else {
+            return $this->success($this->modx->lexicon('crontabmanager_not_log_content'), ['yesLog' => $yesLog, 'content' => $content]);
+        }
+
     }
 
 }

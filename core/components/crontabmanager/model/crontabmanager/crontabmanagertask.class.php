@@ -215,13 +215,22 @@ class CronTabManagerTask extends xPDOSimpleObject
                                     'task_time' => implode(' ', $this->get(array('minutes', 'hours', 'days', 'months', 'weeks'))),
                                     'task_file_log' => $this->getFileLogPath(),
                                     'log_url' => $log_url,
+                                    'add_output' => '',
                                 );
+
+                                if (!empty($this->get('add_output_email'))) {
+                                    $add_output = $this->readLogFileFormat();
+                                    if (!empty($add_output) ) {
+                                        $data['add_output'] = '<br><h3>Вывод из лог файла</h3>----------------<br>' . $add_output . '<br>----------------<br>';
+                                    }
+                                }
 
                                 $subject = $CronTabManager->modx->lexicon('crontabmanager_email_notifications_subject', $data);
                                 $message = $CronTabManager->modx->lexicon('crontabmanager_email_notifications_message', $data);
                                 if (!empty($this->get('message'))) {
                                     $message = $this->get('message') . '<hr>' . $message;
                                 }
+
                                 $response = $CronTabManager->sendEmail($emails, $subject, $message);
                                 if (!$response['success']) {
                                     $CronTabManager->modx->log(xPDO::LOG_LEVEL_ERROR, "[CronTabManager] Error send email notofocation", '', __METHOD__, __FILE__, __LINE__);
@@ -351,6 +360,21 @@ class CronTabManagerTask extends xPDOSimpleObject
             // Получаем только часть строки
             $content = file_get_contents($path, false, null, 0, 10024);
         }
+        return $content;
+    }
+
+
+    /**
+     * Вернет текст из лог файла
+     * @return string|boolean
+     */
+    public function readLogFileFormat()
+    {
+        $content = $this->readLogFile();
+        $content = nl2br($content);
+        $content = str_ireplace('✘', '❌', $content);
+        $content = str_ireplace('✔', '✅', $content);
+        $content = '<pre>' . $content . '</pre>';
         return $content;
     }
 

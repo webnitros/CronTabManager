@@ -50,26 +50,15 @@ abstract class MODxTestCase extends TestCase
     /**
      * Ensure all tests have a reference to the MODX object
      */
-    public function setUp(): void
+    public function setUp()
     {
         $this->modx =& MODxTestHarness::getFixture('modX', 'modx');
         if ($this->modx->request) {
             $this->modx->request->loadErrorHandler();
             $this->modx->error->reset();
         }
-
         /* @var CronTabManager $CronTabManager */
-        $this->CronTabManager = $this->modx->crontabmanager;
-
-
-        $xpdo_meta_map = [];
-        $clases = ['CronTabManagerTask' => 'crontabmanagertask.map.inc.php', 'CronTabManagerTaskLog' => 'crontabmanagertasklog.map.inc.php'];
-        foreach ($clases as $className => $file) {
-            if (empty($this->modx->getTableName($className))) {
-                require MODX_CORE_PATH . 'components/crontabmanager/model/crontabmanager/mysql/' . $file;
-                $this->modx->map[$className] = $xpdo_meta_map[$className];
-            }
-        }
+        $this->CronTabManager = $this->modx->getService('crontabmanager', 'CronTabManager', MODX_CORE_PATH . 'components/crontabmanager/model/');
     }
 
 }
