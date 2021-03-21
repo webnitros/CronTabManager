@@ -71,5 +71,6 @@ https://file.modx.pro/files/e/5/c/e5cb48ccffaeef677442972630484d8f.png
 ```
 
 
-Схема работы 
-https://github.com/sebastianbergmann/phpunit/issues/3213
+### Схема работы PHPunit
+Описание как работают PHP unit тесты
+![image info](./job_phpunit.png)
