@@ -642,10 +642,16 @@ abstract class modCrontabController
     }
 
     private $tests = null;
+    private $testsPath = null;
 
     public function addtest($pathName)
     {
         $this->tests[] = $pathName;
+    }
+
+    protected function setPathTests($pathName)
+    {
+        $this->testsPath = $pathName;
     }
 
     protected function runTest(array $args = [], $escape = true)
@@ -654,6 +660,10 @@ abstract class modCrontabController
         $taks = $this->service->getTask();
         $args['tests'] = implode(',', $this->tests);
         $args['task'] = $taks->get('id');
+
+        if ($this->testsPath) {
+            $args['testsPath'] = $this->testsPath;
+        }
 
         $path_log = $taks->getFileLogPath();
         return $this->exec_bg_script('scheduler/phpunit.php', $args, $escape, $path_log);
@@ -694,7 +704,7 @@ abstract class modCrontabController
 
         $this->print_msg('Run PhpUnit Test');
         foreach ($this->tests as $arg) {
-            $this->print_msg('--- '.$arg);
+            $this->print_msg('--- ' . $arg);
         }
         exit('');
     }

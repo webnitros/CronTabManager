@@ -12,14 +12,15 @@ class CrontabPhpUnit
     /* @var MODxTestSuite $TestSuite */
     protected $TestSuite;
 
-    public function __construct($config = [])
+    public function __construct()
     {
-        $this->vendorPath = $config['vendorPath'];
-        $this->testsPath = $config['testsPath'];
+        $this->vendorPath = dirname(__DIR__, 2) . '/vendor/autoload.php';
     }
 
-    public function initialize()
+    public function initialize($config = [])
     {
+        $this->testsPath = $config['testsPath'];
+
         $response = $this->loadVendorAutoload();
         if ($response !== true) {
             return $response;
@@ -28,6 +29,7 @@ class CrontabPhpUnit
         if ($response !== true) {
             return $response;
         }
+
         if (!file_exists($this->testsPath)) {
             return 'Директория с тестами не найден ' . $this->testsPath;
         }
@@ -36,12 +38,9 @@ class CrontabPhpUnit
             return 'Не удалось загрузить TestSuite';
         }
 
-
         $this->TestSuite = new MODxTestSuite();
-
         return true;
     }
-
 
     /**
      * Загрузка composer

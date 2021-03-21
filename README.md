@@ -1,22 +1,10 @@
 # CronTabManager
 
 Компонент позволяет управлять крон заданиями из админки
-
 Добавляет задания в crontab без использования адресной строки
-
 Для работы необходимо чтобы на хостинге был доступ к функциями:  system и passthru для запуска из под php
 
 ### Добавление phpunit тестов
-
-```bash
-composer install
-```
-
-Установка phpunit
-
-```bash
-composer require --dev phpunit/phpunit ^latest
-```
 
 Создаем файл с названием в корне сайта **tests/DemoTest.php**
 
@@ -24,16 +12,15 @@ composer require --dev phpunit/phpunit ^latest
 <?php
 class DemoTest extends MODxProcessorTestCase
 {
-    public function testSuccess()
+    public function testSiteName()
     {
-        $test = true;
-        $this->assertTrue($test, '"success with custom message"');
+        self::assertEquals('REVOLUTION', $this->modx->getOption('site_name'));
     }
-    
-    public function testFailure()
+
+    public function testSiteStatus()
     {
-        $test = false;
-        $this->assertTrue($test, '"success with custom message"');
+        $site = (boolean)$this->modx->getOption('site_status');
+        self::assertTrue($site);
     }
 }
 ```
@@ -47,15 +34,20 @@ use PHPUnit\Framework\TestSuite;
 /**
  * Демонстрация контроллера
  */
-class CrontabControllerDemoPhpUnit extends modCrontabControllerPhpUnit
+class CrontabControllerDemoPhpUnit extends modCrontabController
 {
 
-    public function process()
+    public function run()
     {
-        $response = $this->runTest('DemoTest');
-        echo '<pre>';
-        print_r($response);
-        die;
+         // Запуск тестов в директории /tests/minishop2/ - запустить все тесты в этой директории
+        $this->addTest('minishop2');
+
+        // Запуск тестов в директории /tests/mini/Setting.php - запустить все тесты в этой папке
+        $this->addTest('mini/Setting');
+
+        // Запустит тест из файла tests/DemoTest.php
+        $this->addTest('DemoTest');
+        $this->runTest();
     }
 }
 ```
@@ -70,6 +62,11 @@ https://file.modx.pro/files/e/5/c/e5cb48ccffaeef677442972630484d8f.png
 ./vendor/bin/phpunit --filter DemoTest tests/DemoTest.php --bootstrap core/components/crontabmanager/lib/phpunit/MODxTestHarness.php  --testdox
 ```
 
+или
+**директория с тестами должна находить в корневой директории или указывайте путь до папки с тестами testsPath={ДИРЕТКОРИЯ}**
+```bash
+php core/scheduler/phpunit.php tests=frontend
+```
 
 ### Схема работы PHPunit
 Описание как работают PHP unit тесты
