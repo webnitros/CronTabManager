@@ -119,7 +119,7 @@ Ext.extend(CronTabManager.grid.Tasks, CronTabManager.grid.Default, {
             header: _('crontabmanager_task_is_blocked'),
             dataIndex: 'is_blocked',
             renderer: CronTabManager.utils.renderBoolean,
-            sortable: true,
+            sortable: false,
             width: 60,
         }, {
             header: _('crontabmanager_task_mode_develop'),
@@ -158,14 +158,26 @@ Ext.extend(CronTabManager.grid.Tasks, CronTabManager.grid.Default, {
 
             {
                 xtype: 'crontabmanager-combo-parent',
-                id: config.id + '-parent',
+                width: 300,
+                custm: true,
+                clear: true,
+                addall: true,
                 emptyText: _('crontabmanager_task_parent'),
                 name: 'parent',
-                width: 200,
+                id: config.id + '-parent',
+                value: '',
                 listeners: {
-                    select: {fn: this.fireParent, scope: this}
+                    select: {
+                        fn: this._filterByCombo,
+                        scope: this
+                    },
+                    afterrender: {
+                        fn: this._filterByCombo,
+                        scope: this
+                    }
                 }
-            }, {
+            },
+             {
                 text: '<i class="icon icon-eye"></i>&nbsp;' + _('crontabmanager_show_crontabs') + ' <small>(' + _('crontabmanager_time_server') + ': ' + CronTabManager.config.time_server + ')</small>',
                 handler: this.ShowCrontabs,
                 scope: this,
@@ -180,18 +192,7 @@ Ext.extend(CronTabManager.grid.Tasks, CronTabManager.grid.Default, {
                 listeners: {
                     check: {fn: this.activeFilter, scope: this}
                 }
-            }/*, {
-            xtype: 'xcheckbox',
-            name: 'completed',
-            id: config.id + '-completed',
-            width: 150,
-            boxLabel: _('crontabmanager_task_filter_completed'),
-            ctCls: 'tbar-checkbox',
-            checked: false,
-            listeners: {
-                check: {fn: this.completedFilter, scope: this}
-            }
-        }*/, this.getSearchField()]
+            }, this.getSearchField()]
     },
 
     getListeners: function () {
@@ -203,17 +204,17 @@ Ext.extend(CronTabManager.grid.Tasks, CronTabManager.grid.Default, {
         }
     },
 
+    _filterByCombo: function (cb) {
+        this.getStore().baseParams[cb.name] = cb.value
+        this.getBottomToolbar().changePage(1)
+    },
+
     activeFilter: function (checkbox, checked) {
         var s = this.getStore()
         s.baseParams.active = checked ? 1 : 0
         this.getBottomToolbar().changePage(1)
     },
 
-    completedFilter: function (checkbox, checked) {
-        var s = this.getStore()
-        s.baseParams.completed = checked ? 1 : 0
-        this.getBottomToolbar().changePage(1)
-    },
 
     fireParent: function (checkbox, value) {
         var s = this.getStore()
@@ -225,13 +226,9 @@ Ext.extend(CronTabManager.grid.Tasks, CronTabManager.grid.Default, {
         this.getStore().baseParams.query = ''
         this.getStore().baseParams.parent = ''
         this.getStore().baseParams.active = 1
-        this.getStore().baseParams.completed = 0
 
         var active = Ext.getCmp('crontabmanager-grid-tasks-active')
         active.setValue(1)
-
-        var completed = Ext.getCmp('crontabmanager-grid-tasks-completed')
-        completed.setValue(0)
 
         var parent = Ext.getCmp('crontabmanager-grid-tasks-parent')
         parent.setValue('')
@@ -340,10 +337,20 @@ Ext.extend(CronTabManager.grid.Tasks, CronTabManager.grid.Default, {
         this.runTaskWindow()
     },
     runTaskWindow: function () {
+
+        var connector_args = '';
+        var $inputArgs = document.getElementById('crontabmanager_connector_args');
+        if ($inputArgs) {
+            connector_args = $inputArgs.value;
+        }
+
         if (this.win !== null) {
             this.win.destroy()
         }
         this.elementLog = false
+
+
+
         this.win = new Ext.Window({
             id: this.config.id + 'runtask'
             , title: this.menu.record.path_task
@@ -351,7 +358,7 @@ Ext.extend(CronTabManager.grid.Tasks, CronTabManager.grid.Default, {
             , height: 450
             , layout: 'fit'
             , autoLoad: {
-                url: CronTabManager.config['connector_cron_url'] + '?path_task=' + this.menu.record.path_task + '&scheduler_path=' + CronTabManager.config.schedulerPath + '&connector_base_path_url=' + CronTabManager.config.schedulerPath,
+                url: CronTabManager.config['connector_cron_url'] + '?path_task=' + this.menu.record.path_task + '&scheduler_path=' + CronTabManager.config.schedulerPath + '&connector_base_path_url=' + CronTabManager.config.schedulerPath+ '&connector_args=' + connector_args,
                 scripts: true
             }
         })

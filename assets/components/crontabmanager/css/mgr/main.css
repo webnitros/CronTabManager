@@ -109,3 +109,18 @@ label[for=crontabmanager-grid-tasks-completed] {
 label[for=crontabmanager-grid-tasks-completed]::before {
     margin-top: -6px;
 }
+.crontabmanager-cron-args {
+    width: 231px;
+    margin: 2px 0 0 8px;
+    float: right;
+}
+
+
+/* gl-active field */
+.x-field-crontabmanager-active-clear,
+.x-field-crontabmanager-active-go {border-left: 1px solid #e4e4e4 !important;}
+.x-field-crontabmanager-active-clear:hover,
+.x-field-crontabmanager-active-go:hover {border-left-color: transparent !important;}
+.x-field-crontabmanager-active-clear:before {content: '\f00d' !important;}
+.x-field-crontabmanager-active-go {right: 31px !important; border-radius: 0 !important;}
+.x-field-crontabmanager-active-go:before {content: '\f204' !important;}

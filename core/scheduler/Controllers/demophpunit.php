@@ -16,7 +16,7 @@ class CrontabControllerDemoPhpUnit extends modCrontabController
         $this->addTest('DemoTest');
 
         // Запускает все тесты находящиеся в директории tests/frontend/
-        $this->addTest('frontend');
+        #$this->addTest('frontend');
 
         $this->runTest();
     }

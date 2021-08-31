@@ -40,10 +40,29 @@ if ($ManagerTask->get('path_task_your')) {
     }
 }
 
+$modx->lexicon->load('crontabmanager:manager');
+$windows = $modx->lexicon('crontabmanager_cron_connector_run_task_windows');
+$windows_btn = $modx->lexicon('crontabmanager_cron_connector_run_task_windows_btn');
 
-echo '<button class="crontabmanager-btn crontabmanager-btn-default icon icon-play" onclick="runTaskWindow()" title="Запустить задание"> <small >Перезапустить</small></button>';
-echo '<button class="crontabmanager-btn crontabmanager-btn-default icon icon-unlock" onclick="unlockTask()" title="Разблокировать"> <small>Разблокировать</small></button>';
-echo '<button class="crontabmanager-btn crontabmanager-btn-default icon icon-eye" onclick="readLogFileBody()" title="Читать лог файл"> <small>Читать лог файл</small></button>';
+$unlock = $modx->lexicon('crontabmanager_cron_connector_unlock');
+$unlock_btn = $modx->lexicon('crontabmanager_cron_connector_unlock_btn');
+
+$read_log = $modx->lexicon('crontabmanager_cron_connector_read_log');
+$read_log_btn = $modx->lexicon('crontabmanager_cron_connector_read_log');
+
+$connector_args = $modx->lexicon('crontabmanager_cron_connector_args');
+
+$connector_args_value = trim(@$_GET['connector_args']);
+
+echo '<button class="crontabmanager-btn crontabmanager-btn-default icon icon-play" onclick="runTaskWindow()" title="' . $windows . '"> <small >' . $windows_btn . '</small></button>';
+echo '<button class="crontabmanager-btn crontabmanager-btn-default icon icon-unlock" onclick="unlockTask()" title="' . $unlock . '"> <small>' . $unlock_btn . '</small></button>';
+echo '<button class="crontabmanager-btn crontabmanager-btn-default icon icon-eye" onclick="readLogFileBody()" title="' . $read_log . '"> <small>' . $read_log_btn . '</small></button>';
+echo '<input type="text" placeholder="' . $connector_args . '" class="crontabmanager-cron-args x-form-text x-form-field " id="crontabmanager_connector_args" name="connector_args" value="' . $connector_args_value . '">';
 echo '<hr>';
+
+$str = str_ireplace('.php', '', $task);
+if (!empty($connector_args_value)) {
+    $scheduler->setArgs(['', $connector_args_value]);
+}
 $scheduler->php(str_ireplace('.php', '', $task));
 $scheduler->process();

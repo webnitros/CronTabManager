@@ -149,8 +149,19 @@ $_lang['crontabmanager_categories_remove_confirm'] = 'Вы уверены, чт�
 $_lang['crontabmanager_task_parent'] = 'Категория';
 $_lang['crontabmanager_task_parent_empty'] = 'Выберите категорию';
 $_lang['crontabmanager_task_filter_active'] = 'Активные';
-$_lang['crontabmanager_task_filter_completed'] = 'Не завершенные';
+$_lang['crontabmanager_task_filter_mode_develop'] = 'В разработке';
 
 
 $_lang['crontabmanager_task_log_remove'] = 'Удалить лог';
 $_lang['crontabmanager_task_logs_remove'] = 'Удалить логи';
+
+$_lang['crontabmanager_cron_connector_run_task_windows'] = 'Запустить задание';
+$_lang['crontabmanager_cron_connector_run_task_windows_btn'] = 'Перезапустить';
+
+$_lang['crontabmanager_cron_connector_unlock'] = 'Разблокировать задание';
+$_lang['crontabmanager_cron_connector_unlock_btn'] = 'Разблокировать';
+
+$_lang['crontabmanager_cron_connector_read_log'] = 'Читать лог файл';
+$_lang['crontabmanager_cron_connector_read_log_btn'] = 'Читать лог файл';
+
+$_lang['crontabmanager_cron_connector_args'] = 'Аргументы в виде user=1 resource=2';

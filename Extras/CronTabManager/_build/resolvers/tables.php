@@ -134,7 +134,6 @@ if ($transport->xpdo) {
                 $Category->set('name', 'Tests');
                 $Category->save();
 
-
                 /* @var CronTabManagerTask $object */
                 if (!$Task = $modx->getObject('CronTabManagerTask', array('path_task' => 'demophpunit.php'))) {
                     $Task = $modx->newObject('CronTabManagerTask');
@@ -150,6 +149,7 @@ if ($transport->xpdo) {
                     $Task->set('log_storage_time', 10080);
                     $Task->save();
                 }
+
             }
 
             break;

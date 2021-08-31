@@ -85,6 +85,16 @@ class MODxTestHarness
             );
             self::$properties['mysql_array_driverOptions'] = array();
 
+            // Проверяем какой конфиг подключить. Если переданы параметры то считаем что это был запуск с локальной машины
+            $args = [];
+            if (isset($GLOBALS['argv']) && count($GLOBALS['argv']) > 1) {
+                $query = implode('&', array_slice($GLOBALS['argv'], 1));
+                parse_str($query, $args);
+            }
+            $isTest =  isset($args['--configuration']);
+            if ($isTest) {
+                self::$properties['config_key'] = 'test';
+            }
 
             $fixture = null;
             $driver = self::$properties['xpdo_driver'];

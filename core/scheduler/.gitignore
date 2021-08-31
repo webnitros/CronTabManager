@@ -1,0 +1,6 @@
+ControllersLinks/*.php
+ControllersLinks/**/*.php
+ControllersLinks/**/**/*.php
+ControllersLinks/**/**/**/*.php
+logs/*.log
+lock/*.txt

@@ -333,11 +333,11 @@ class SchedulerService
 
 
         if ($this->ForcedStop) {
-            $out .= "Forced stop, max_exec_time: {$this->getOption('max_exec_time')} s".$prefix;
+            $out .= "Forced stop, max_exec_time: {$this->getOption('max_exec_time')} s" . $prefix;
         }
-        $out .= "Time all: {$exec_time}".$prefix;
-        $out .= "Records process: {$this->recordsCount}".$prefix;
-        $out .= "Memory: {$memory}".$prefix;
+        $out .= "Time all: {$exec_time}" . $prefix;
+        $out .= "Records process: {$this->recordsCount}" . $prefix;
+        $out .= "Memory: {$memory}" . $prefix;
         $totalTime = (microtime(true) - $tstart);
         $totalTime = sprintf("%2.4f s", $totalTime);
         if (!empty($modx)) {
@@ -347,14 +347,13 @@ class SchedulerService
 
             $phpTime = $totalTime - $queryTime;
             $phpTime = sprintf("%2.4f s", $phpTime);
-            $out .= "queries: {$queries}".$prefix;
-            $out .= "queryTime: {$queryTime}".$prefix;
-            $out .= "phpTime: {$phpTime}".$prefix;
+            $out .= "queries: {$queries}" . $prefix;
+            $out .= "queryTime: {$queryTime}" . $prefix;
+            $out .= "phpTime: {$phpTime}" . $prefix;
         }
-        $out .= "TotalTime: {$totalTime}".$prefix;
+        $out .= "TotalTime: {$totalTime}" . $prefix;
         return $out;
     }
-
 
 
     public function setMode()
@@ -516,5 +515,43 @@ class SchedulerService
     public function enableEnabledException()
     {
         $this->enabledException = true;
+    }
+
+    /* @var  array|null $_args */
+    protected $_args = null;
+
+    /**
+     * Велючаем выброс
+     */
+    public function setArgs($args)
+    {
+        if (!empty($args)) {
+            $args = array_slice($args, 1);
+            $data = [];
+            foreach ($args as $arg) {
+                list($key, $value) = explode('=', $arg);
+                $data[$key] = $value;
+            }
+            $this->_args = $data;
+        }
+
+    }
+
+    public function getArgs()
+    {
+        return $this->_args;
+    }
+
+
+    /**
+     * @param $key
+     * @return string|null
+     */
+    public function getArg($key)
+    {
+        if (!empty($this->_args[$key])) {
+            return $this->_args[$key];
+        }
+        return null;
     }
 }

@@ -71,3 +71,10 @@ php core/scheduler/phpunit.php tests=frontend
 ### Схема работы PHPunit
 Описание как работают PHP unit тесты
 ![image info](./job_phpunit.png)
+
+
+### Полезные функции в корнтроллерах
+
+```php
+$this->send
+```
