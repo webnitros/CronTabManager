@@ -16,6 +16,6 @@ class DemoTest extends MODxProcessorTestCase
     public function testSiteStatus()
     {
         $site = (boolean)$this->modx->getOption('site_status');
-        self::assertTrue($site);
+        self::assertNOtTrue($site);
     }
 }
