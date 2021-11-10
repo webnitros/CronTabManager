@@ -85,5 +85,25 @@ return [
     ],
 
 
+    // blocking
+    'rest_enable' => [
+        'xtype' => 'combo-boolean',
+        'value' => 1,
+        'area' => 'crontabmanager_rest',
+    ],
+
+    'rest_client_id' => [
+        'xtype' => 'textfield',
+        'value' => '',
+        'area' => 'crontabmanager_rest',
+    ],
+
+    'rest_controller' => [
+        'xtype' => 'textfield',
+        'value' => 'assets/components/crontabmanager/rest.php',
+        'area' => 'crontabmanager_rest',
+    ],
+
+
 
 ];

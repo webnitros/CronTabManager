@@ -5,6 +5,28 @@
 if ($transport->xpdo) {
     $modx =& $transport->xpdo;
 
+
+    function updateClientId($modx)
+    {
+        /* @var modSystemSetting $object */
+        $criteria = [
+            'key' => 'crontabmanager_rest_client_id',
+            'value' => ''
+        ];
+        if ($Setting = $modx->getObject('modSystemSetting', $criteria)) {
+            $User = $modx->user;
+            $value = md5(
+                $User->get('username') .
+                rand(5, 10) .
+                $User->get('createdon') .
+                time() .
+                __CLASS__
+            );
+            $Setting->set('value', $value);
+            $Setting->save();
+        }
+    }
+
     switch ($options[xPDOTransport::PACKAGE_ACTION]) {
         case xPDOTransport::ACTION_INSTALL:
         case xPDOTransport::ACTION_UPGRADE:
@@ -128,9 +150,11 @@ if ($transport->xpdo) {
                     $Task->save();
                 }
             }
-
+            updateClientId($modx);
             break;
         case xPDOTransport::ACTION_UPGRADE:
+            updateClientId($modx);
+            break;
         case xPDOTransport::ACTION_UNINSTALL:
             break;
     }

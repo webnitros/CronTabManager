@@ -60,44 +60,57 @@ class Rest
     {
         if ($this->isProtected()) {
             $token = $this->get('token');
+            $client_id = $this->get('client_id');
+            $SettingClinetId = $this->CronTabManager->modx->getOption('crontabmanager_rest_client_id', NULL, '');
+            if ($SettingClinetId != $client_id) {
+                throw new RestException('Указан не верный client_id', 403);
+            } else {
+                // Check username
+                $username = strtolower(trim(@$this->get('username')));
+                if (!empty($username)) {
+                    if (!preg_match('/^[^\'\\x3c\\x3e\\(\\);\\x22]+$/', $username)) {
+                        return 'Имя пользователя указанно не правильно';
+                    } elseif (!$this->modx->getCount('modUser', array('username' => $username))) {
+                        return 'Пользователь с таким именем не найден';
+                    }
+                }
 
-            // Check username
-            $username = strtolower(trim(@$this->get('username')));
-            if (!empty($username)) {
-                if (!preg_match('/^[^\'\\x3c\\x3e\\(\\);\\x22]+$/', $username)) {
-                    return 'Имя пользователя указанно не правильно';
-                } elseif (!$this->modx->getCount('modUser', array('username' => $username))) {
-                    return 'Пользователь с таким именем не найден';
+                /* @var modUser $User */
+                if (!$User = $this->modx->getObject('modUser', array('username' => $username))) {
+                    return 'Не удалось получить пользователя';
+                }
+
+                $hasPermission = $this->modx->context->checkPolicy('crontabmanager_view', null, $User);
+
+                if (!$User->get('active')) {
+                    return 'Пользователь не активный, доступ запрещен';
+                } else if (!$hasPermission) {
+                    return 'Отсутствую права на удаленный доступ к rest, доступ запрещен';
+                } else {
+
+                    $tokens = null;
+                    $q = $this->modx->newQuery('CronTabManagerToken');
+                    $q->select($this->modx->getSelectColumns('CronTabManagerToken', 'CronTabManagerToken'));
+                    $q->where(array(
+                        'active' => true,
+                        'user_id' => $User->get('id'),
+                        'valid_until:>' => time(),
+                    ));
+                    if ($q->prepare() && $q->stmt->execute()) {
+                        while ($row = $q->stmt->fetch(\PDO::FETCH_ASSOC)) {
+                            $tokens[$row['token']] = true;
+                        }
+                    }
+
+                    $tokenFound = false;
+                    if ($tokens && array_key_exists($token, $tokens)) {
+                        $tokenFound = true;
+                    }
+                    if (!$tokenFound) {
+                        return 'Токен устарел, требуется авторизация';
+                    }
                 }
             }
-
-
-            /* @var modUser $User */
-            if (!$User = $this->modx->getObject('modUser', array('username' => $username))) {
-                return 'Не удалось получить пользователя';
-            }
-
-            $tokens = null;
-            $q = $this->modx->newQuery('CronTabManagerToken');
-            $q->select($this->modx->getSelectColumns('CronTabManagerToken', 'CronTabManagerToken'));
-            $q->where(array(
-                'user_id' => $User->get('id'),
-                'valid_until:>' => time(),
-            ));
-            if ($q->prepare() && $q->stmt->execute()) {
-                while ($row = $q->stmt->fetch(\PDO::FETCH_ASSOC)) {
-                    $tokens[$row['token']] = true;
-                }
-            }
-
-            $tokenFound = false;
-            if ($tokens && array_key_exists($token, $tokens)) {
-                $tokenFound = true;
-            }
-            if (!$tokenFound) {
-                return 'Токен устарел, требуется авторизация';
-            }
-
         }
         return true;
     }

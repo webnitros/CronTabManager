@@ -35,19 +35,25 @@ class Server
 
     public function process()
     {
+
         $status = 200;
-        try {
-            $Rest = new Rest($this->CronTabManager);
-            $Rest->process();
-            $response = $Rest->getResponse();
-            $status = $Rest->getStatusCode();
-        } catch (AuthException $e) {
-            $response = $this->CronTabManager->error($e->getMessage());
-        } catch (LogicException $e) {
-            $response = $this->CronTabManager->error($e->getMessage());
-        } catch (RestException $e) {
-            $status = $e->getCode();
-            $response = $this->CronTabManager->error($e->getMessage());
+        $enable = $this->CronTabManager->modx->getOption('crontabmanager_rest_enable', NULL, false);
+        if ($enable) {
+            try {
+                $Rest = new Rest($this->CronTabManager);
+                $Rest->process();
+                $response = $Rest->getResponse();
+                $status = $Rest->getStatusCode();
+            } catch (AuthException $e) {
+                $response = $this->CronTabManager->error($e->getMessage());
+            } catch (LogicException $e) {
+                $response = $this->CronTabManager->error($e->getMessage());
+            } catch (RestException $e) {
+                $status = $e->getCode();
+                $response = $this->CronTabManager->error($e->getMessage());
+            }
+        } else {
+            $response = $this->CronTabManager->error('rest для приложения отключен');
         }
 
         $this->response($response, $status);
@@ -69,10 +75,10 @@ class Server
      * @param int $status
      * @return string
      */
-    protected function getResponseCodeMessage($status) {
+    protected function getResponseCodeMessage($status)
+    {
         return (isset(self::$responseCodes[$status])) ? self::$responseCodes[$status] : self::$responseCodes[500];
     }
-
 
 
     /**
@@ -80,9 +86,9 @@ class Server
      * @var array
      */
     protected static $contentTypes = array(
-        'xml'   => 'application/xml',
-        'json'  => 'application/json',
-        'qs'    => 'text/plain'
+        'xml' => 'application/xml',
+        'json' => 'application/json',
+        'qs' => 'text/plain'
     );
     /**
      * Dictionary of response codes and their text descriptions

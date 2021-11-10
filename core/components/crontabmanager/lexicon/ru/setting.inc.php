@@ -3,6 +3,7 @@
 $_lang['area_crontabmanager_main'] = 'Основные';
 $_lang['area_crontabmanager_path'] = 'Директории с scheduler';
 $_lang['area_crontabmanager_blocking'] = 'Блокировки';
+$_lang['area_crontabmanager_rest'] = 'Rest для проложения';
 
 
 // Path
@@ -45,3 +46,14 @@ $_lang['setting_crontabmanager_email_administrator_desc'] = 'При привыш
 
 $_lang['setting_crontabmanager_blocking_time_minutes'] = 'Время ожидания до автоматической разблокировки';
 $_lang['setting_crontabmanager_blocking_time_minutes_desc'] = 'По умолчанию 1 минута. Если во время запуска задание небыло завершено, то при следующем запуске из блокирующего файла будет получено время старта. Если оно привысит указанное количество минут, то блокировочный файл будет удален автоматически';
+
+
+
+$_lang['setting_crontabmanager_rest_enable'] = 'Включить rest для приложения';
+$_lang['setting_crontabmanager_rest_enable_desc'] = 'Укажите Да если хотите чтобы преложение CronTabManager могло обращаться к сайт';
+
+$_lang['setting_crontabmanager_rest_client_id'] = 'Client ID';
+$_lang['setting_crontabmanager_rest_client_id_desc'] = 'Уникальный индитификатор приложения для авторизации на сайте из проложения';
+
+$_lang['setting_crontabmanager_rest_controller'] = 'Путь к контроллеру rest';
+$_lang['setting_crontabmanager_rest_controller_desc'] = 'Можно указать свой уникальный путь. По умолчанию assets/components/crontabmanager/rest.php';
