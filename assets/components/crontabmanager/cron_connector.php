@@ -5,9 +5,7 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 $task = preg_replace('/[^a-zA-Z0-9\-\._]/', '/', $_REQUEST['path_task']);
-$scheduler_path = preg_replace('/[^a-zA-Z0-9\-\._]/', '/', $_REQUEST['scheduler_path']);
-
-#sleep(60);
+$scheduler_path = preg_replace('/[^a-zA-Z0-9\-\.:_]/', DIRECTORY_SEPARATOR, $_REQUEST['scheduler_path']);
 
 if (!file_exists($scheduler_path)) {
     exit('Контроллер не найден');

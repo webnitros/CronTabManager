@@ -81,7 +81,9 @@ class CrontabManagerHandler implements CrontabManagerHandlerInterface
             return false;
         }
         $this->crontab = new $class();
-        $this->crontab->file_crontab_path = $this->CrontabManager->config['schedulerPath'] . '/crontabs/' . $_SERVER['USER'];
+
+        $user = !empty($_SERVER['USER']) ? $_SERVER['USER'] : 'cron';
+        $this->crontab->file_crontab_path = $this->CrontabManager->config['schedulerPath'] . '/crontabs/' . $user;
         return true;
     }
 
