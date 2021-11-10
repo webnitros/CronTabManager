@@ -1,0 +1,17 @@
+{
+    "name": "astep/crontabmanager",
+    "autoload": {
+        "psr-4": {
+            "Webnitros\\CronTabManager\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "webnitros",
+            "email": "info@bustep.ru"
+        }
+    ],
+    "require": {
+        "fotografde/oauth-client": "^1.0"
+    }
+}
