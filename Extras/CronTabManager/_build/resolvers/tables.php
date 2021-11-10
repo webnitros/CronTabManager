@@ -129,29 +129,6 @@ if ($transport->xpdo) {
                 }
             }
 
-            if (!$Category = $modx->getObject('CronTabManagerCategory', array('name' => 'Tests'))) {
-                $Category = $modx->newObject('CronTabManagerCategory');
-                $Category->set('name', 'Tests');
-                $Category->save();
-
-                /* @var CronTabManagerTask $object */
-                if (!$Task = $modx->getObject('CronTabManagerTask', array('path_task' => 'demophpunit.php'))) {
-                    $Task = $modx->newObject('CronTabManagerTask');
-                    $Task->set('parent', $Category->get('id'));
-                    $Task->set('path_task', 'demophpunit.php');
-                    $Task->set('description', 'Тестовое задание для демонстрации работы PHPunit тестов');
-                    $Task->set('minutes', '*/1');
-                    $Task->set('hours', '*');
-                    $Task->set('days', '*');
-                    $Task->set('months', '*');
-                    $Task->set('weeks', '*');
-                    $Task->set('active', 1);
-                    $Task->set('log_storage_time', 10080);
-                    $Task->save();
-                }
-
-            }
-
             break;
         case xPDOTransport::ACTION_UPGRADE:
         case xPDOTransport::ACTION_UNINSTALL:

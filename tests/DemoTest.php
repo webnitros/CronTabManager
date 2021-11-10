@@ -10,6 +10,7 @@ class DemoTest extends MODxProcessorTestCase
 {
     public function testSiteName()
     {
+
         self::assertEquals('REVOLUTION', $this->modx->getOption('site_name'));
     }
 

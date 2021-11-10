@@ -16,16 +16,33 @@ class CronTabManagerHomeManagerController extends modExtraManagerController
     public function initialize()
     {
         $this->CronTabManager = $this->modx->getService('CronTabManager', 'CronTabManager', MODX_CORE_PATH . 'components/crontabmanager/model/');
+
+        $this->tokenIssuance();
         parent::initialize();
     }
 
+
+    /**
+     *  Выдача api_key после подтверждения прав
+     */
+    public function tokenIssuance()
+    {
+        if (!empty($_GET['oauth']) && $_GET['oauth'] === 'application') {
+            if (!$this->modx->hasPermission('crontabmanager_view')) {
+                $this->failure($this->modx->lexicon('access_denied'));
+            } else {
+                $Auth = new \Webnitros\CronTabManager\Auth($this->CronTabManager);
+                $Auth->createApiKey($this->modx->user);
+            }
+        }
+    }
 
     /**
      * @return array
      */
     public function getLanguageTopics()
     {
-        return ['crontabmanager:manager','crontabmanager:default'];
+        return ['crontabmanager:manager', 'crontabmanager:default'];
     }
 
 
@@ -34,7 +51,7 @@ class CronTabManagerHomeManagerController extends modExtraManagerController
      */
     public function checkPermissions()
     {
-        return true;
+        return $this->modx->hasPermission('crontabmanager_view');
     }
 
 

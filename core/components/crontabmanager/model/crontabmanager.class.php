@@ -1,5 +1,7 @@
 <?php
 
+include_once dirname(dirname(__FILE__)) . '/vendor/autoload.php';
+
 class CronTabManager
 {
     /** @var modX $modx */
@@ -178,9 +180,9 @@ class CronTabManager
     /**
      * Method loads custom classes from specified directory
      *
+     * @return void
      * @var string $dir Directory for load classes
      *
-     * @return void
      */
     public function loadCustomClasses($dir)
     {
