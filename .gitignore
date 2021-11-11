@@ -2,3 +2,4 @@
 # IntellijIdea files
 *.iml
 .idea
+core/components/crontabmanager/vendor
