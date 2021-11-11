@@ -39,6 +39,16 @@ CronTabManager.panel.Home = function (config) {
                     xtype: 'crontabmanager-grid-categories',
                     cls: 'main-wrapper',
                 }]
+            },{
+                title: _('crontabmanager_notifications'),
+                layout: 'anchor',
+                items: [{
+                    html: _('crontabmanager_notifications_intro_msg'),
+                    cls: 'panel-desc',
+                }, {
+                    xtype: 'crontabmanager-grid-notifications',
+                    cls: 'main-wrapper',
+                }]
             }]
         }]
     });

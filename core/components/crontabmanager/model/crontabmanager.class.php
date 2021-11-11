@@ -313,6 +313,23 @@ if (!defined("MODX_CRONTAB_MODE") OR !MODX_CRONTAB_MODE) {
 
 
     /**
+     * Записываем метку об уведомлении в базу данных
+     * @param CronTabManagerTask $Task
+     * @param int $number_attempts
+     * @param null $emails
+     */
+    public function createNotice(CronTabManagerTask $Task, int $number_attempts, $emails = [])
+    {
+        /* @var CronTabManagerNotification $Notification */
+        $object = $this->modx->newObject('CronTabManagerNotification');
+        $object->set('task_id', $Task->get('id'));
+        $object->set('number_attempts', $number_attempts);
+        $object->set('notification_emails', $emails);
+        $object->set('send_email', !empty($emails));
+        $object->save();
+    }
+
+    /**
      * Function for sending email
      *
      * @param string|array $emails

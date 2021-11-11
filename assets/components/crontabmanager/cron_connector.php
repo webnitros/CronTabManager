@@ -52,9 +52,9 @@ $connector_args = $modx->lexicon('crontabmanager_cron_connector_args');
 
 $connector_args_value = trim(@$_GET['connector_args']);
 
-echo '<button class="crontabmanager-btn crontabmanager-btn-default icon icon-play" onclick="runTaskWindow()" title="' . $windows . '"> <small >' . $windows_btn . '</small></button>';
-echo '<button class="crontabmanager-btn crontabmanager-btn-default icon icon-unlock" onclick="unlockTask()" title="' . $unlock . '"> <small>' . $unlock_btn . '</small></button>';
-echo '<button class="crontabmanager-btn crontabmanager-btn-default icon icon-eye" onclick="readLogFileBody()" title="' . $read_log . '"> <small>' . $read_log_btn . '</small></button>';
+echo '<button class="crontabmanager-btn crontabmanager-btn-default icon icon-play" onclick="runTaskWindow()" title="' . $windows . '"> <small > ' . $windows_btn . '</small></button>';
+echo '<button class="crontabmanager-btn crontabmanager-btn-default icon icon-unlock" onclick="unlockTask()" title="' . $unlock . '"> <small> ' . $unlock_btn . '</small></button>';
+echo '<button class="crontabmanager-btn crontabmanager-btn-default icon icon-eye" onclick="readLogFileBody()" title="' . $read_log . '"> <small> ' . $read_log_btn . '</small></button>';
 echo '<input type="text" placeholder="' . $connector_args . '" class="crontabmanager-cron-args x-form-text x-form-field " id="crontabmanager_connector_args" name="connector_args" value="' . $connector_args_value . '">';
 echo '<hr>';
 

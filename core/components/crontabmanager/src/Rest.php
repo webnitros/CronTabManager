@@ -9,7 +9,9 @@
 namespace Webnitros\CronTabManager;
 
 use CronTabManager;
+use CronTabManagerNotification;
 use CronTabManagerTask;
+use modProcessorResponse;
 use modUser;
 use modX;
 use Webnitros\CronTabManager\Exceptions\RestException;
@@ -60,10 +62,9 @@ class Rest
     {
         if ($this->isProtected()) {
             $token = $this->get('token');
-            $client_id = $this->get('client_id');
-            $SettingClinetId = $this->CronTabManager->modx->getOption('crontabmanager_rest_client_id', NULL, '');
-            if ($SettingClinetId != $client_id) {
-                throw new RestException('Указан не верный client_id', 403);
+            $response = $this->checkClientId();
+            if ($response !== true) {
+                throw new RestException($response, 403);
             } else {
                 // Check username
                 $username = strtolower(trim(@$this->get('username')));
@@ -115,6 +116,16 @@ class Rest
         return true;
     }
 
+    public function checkClientId()
+    {
+        $client_id = $this->get('client_id');
+        $SettingClinetId = $this->CronTabManager->modx->getOption('crontabmanager_rest_client_id', NULL, 'CLIENT_ID');
+        if ($SettingClinetId != $client_id) {
+            return 'Указан не верный client_id';
+        }
+        return true;
+    }
+
     public function process()
     {
         $action = (string)@$this->get('action');
@@ -123,13 +134,10 @@ class Rest
             $this->protected();
         }
 
-        $client_id = $this->get('client_id');
-        $SettingClinetId = $this->CronTabManager->modx->getOption('crontabmanager_rest_clinet_id', NULL, 'CLIENT_ID');
-        if ($SettingClinetId != $client_id) {
-            $this->failure('Указан не верный client_id');
+        $response = $this->checkClientId();
+        if ($response !== true) {
+            $this->failure($response);
         } else {
-
-
             $response = $this->autification();
             if ($response !== true) {
                 throw new RestException($response, 403);
@@ -143,6 +151,7 @@ class Rest
                 case 'unlock':
                 case 'play':
                 case 'log':
+                case 'notifications':
                     $method = '_' . $action;
                     if (method_exists($this, $method)) {
                         $run = $method;
@@ -343,6 +352,29 @@ class Rest
         }
 
         $this->success('', ['tasks' => $tasks]);
+    }
+
+    protected function _notifications()
+    {
+        $notifications = [];
+        /* @var CronTabManagerNotification $object */
+        $q = $this->CronTabManager->modx->newQuery('CronTabManagerNotification');
+        if ($objectList = $this->modx->getCollection('CronTabManagerNotification', $q)) {
+            foreach ($objectList as $object) {
+                $notifications[] = $object->toArray();
+                #$object->set('read_application',true);
+            }
+        }
+
+        /* @var modProcessorResponse $response */
+        $response = $this->CronTabManager->runProcessor('mgr/notification/getlist');
+
+        if ($response->isError()) {
+            $this->failure($response->getMessage());
+        } else {
+            $res = $this->modx->fromJSON($response->response);
+            $this->success('', ['notifications' => $res['results']]);
+        }
     }
 
     protected function _check()

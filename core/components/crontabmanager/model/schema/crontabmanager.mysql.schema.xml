@@ -40,6 +40,7 @@
 
         <aggregate alias="Category" class="CronTabManagerCategory" local="parent" foreign="id" cardinality="one" owner="foreign"/>
         <composite alias="Logs" class="CronTabManagerTaskLog" local="id" foreign="task_id" cardinality="many" owner="local"/>
+        <composite alias="Notifications" class="CronTabManagerNotification" local="id" foreign="task_id" cardinality="many" owner="local"/>
     </object>
 
     <object class="CronTabManagerCategory" table="ctma_categories" extends="xPDOSimpleObject">
@@ -85,7 +86,6 @@
         <aggregate alias="Task" class="CronTabManagerTask" local="task_id" foreign="id" cardinality="one" owner="foreign"/>
     </object>
 
-
     <object class="CronTabManagerToken" table="ctma_api_token" extends="xPDOSimpleObject">
 
         <field key="user_id" dbtype="int" precision="10" phptype="integer" null="true" default="0"/>
@@ -114,4 +114,28 @@
 
         <aggregate alias="User" class="modUser" local="user_id" foreign="id" cardinality="one" owner="foreign"/>
     </object>
+
+    <object class="CronTabManagerNotification" table="ctma_task_notification" extends="xPDOSimpleObject">
+        <field key="task_id" dbtype="int" precision="10" phptype="integer" null="true" default="0"/>
+        <field key="createdon" dbtype="int" precision="20" phptype="timestamp" null="false" default="0"/>
+        <field key="updatedon" dbtype="int" precision="20" phptype="timestamp" null="false" default="0"/>
+        <field key="send_email" dbtype="tinyint" precision="1" phptype="boolean" null="true" default="0"/>
+        <field key="read" dbtype="tinyint" precision="1" phptype="boolean" null="true" default="0"/>
+        <field key="read_application" dbtype="tinyint" precision="1" phptype="boolean" null="true" default="0"/>
+        <field key="message" dbtype="text" phptype="string" null="true"/>
+        <field key="notification_emails" dbtype="text" phptype="json" null="true"/>
+        <field key="number_attempts" dbtype="int" precision="10" phptype="integer" null="true" default="0"/>
+
+        <index alias="createdon" name="createdon" primary="false" unique="false" type="BTREE">
+            <column key="createdon" length="" collation="A" null="false"/>
+        </index>
+        <index alias="read" name="read" primary="false" unique="false" type="BTREE">
+            <column key="read" length="" collation="A" null="false"/>
+        </index>
+        <index alias="read_application" name="read_application" primary="false" unique="false" type="BTREE">
+            <column key="read_application" length="" collation="A" null="false"/>
+        </index>
+        <aggregate alias="Task" class="CronTabManagerTask" local="task_id" foreign="id" cardinality="one" owner="foreign"/>
+    </object>
+
 </model>

@@ -124,3 +124,21 @@ label[for=crontabmanager-grid-tasks-completed]::before {
 .x-field-crontabmanager-active-clear:before {content: '\f00d' !important;}
 .x-field-crontabmanager-active-go {right: 31px !important; border-radius: 0 !important;}
 .x-field-crontabmanager-active-go:before {content: '\f204' !important;}
+
+/* gl-read field */
+.x-field-crontabmanager-read-clear,
+.x-field-crontabmanager-read-go {border-left: 1px solid #e4e4e4 !important;}
+.x-field-crontabmanager-read-clear:hover,
+.x-field-crontabmanager-read-go:hover {border-left-color: transparent !important;}
+.x-field-crontabmanager-read-clear:before {content: '\f00d' !important;}
+.x-field-crontabmanager-read-go {right: 31px !important; border-radius: 0 !important;}
+.x-field-crontabmanager-read-go:before {content: '\f204' !important;}
+
+label[for=crontabmanager-grid-notifications-read] {
+    margin: 0 41px 0 7px !important;
+    padding: 0 0 0 26px !important;
+}
+
+label[for=crontabmanager-grid-notifications-read]::before {
+    margin-top: -6px;
+}

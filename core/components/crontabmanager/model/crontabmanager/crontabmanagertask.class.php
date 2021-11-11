@@ -193,14 +193,16 @@ class CronTabManagerTask extends xPDOSimpleObject
                         }
 
 
+                        /* @var CronTabManager $CronTabManager */
+                        $CronTabManager = $this->xpdo->getService('crontabmanager', 'CronTabManager', MODX_CORE_PATH . 'components/crontabmanager/model/');
+                        $CronTabManager->createNotice($this, $max_number_attempts, $emails);
+
                         if (!empty($emails)) {
 
                             $site_url = $this->getOption('site_url');
                             $blockup_url = $site_url . 'assets/components/crontabmanager/blockup.php';
                             $log_url = $site_url . 'assets/components/crontabmanager/log.php';
 
-                            /* @var CronTabManager $CronTabManager */
-                            $CronTabManager = $this->xpdo->getService('crontabmanager', 'CronTabManager', MODX_CORE_PATH . 'components/crontabmanager/model/');
                             if (!empty($emails)) {
                                 $data = array(
                                     'site_url' => $site_url,
@@ -220,7 +222,7 @@ class CronTabManagerTask extends xPDOSimpleObject
 
                                 if (!empty($this->get('add_output_email'))) {
                                     $add_output = $this->readLogFileFormat();
-                                    if (!empty($add_output) ) {
+                                    if (!empty($add_output)) {
                                         $data['add_output'] = '<br><h3>Вывод из лог файла</h3>----------------<br>' . $add_output . '<br>----------------<br>';
                                     }
                                 }
@@ -231,17 +233,24 @@ class CronTabManagerTask extends xPDOSimpleObject
                                     $message = $this->get('message') . '<hr>' . $message;
                                 }
 
+
                                 $response = $CronTabManager->sendEmail($emails, $subject, $message);
                                 if (!$response['success']) {
                                     $CronTabManager->modx->log(xPDO::LOG_LEVEL_ERROR, "[CronTabManager] Error send email notofocation", '', __METHOD__, __FILE__, __LINE__);
                                 }
 
                             }
-
-                            // Устанавливаем метку об отправки уведомления для этого задания
-                            $sql = "UPDATE {$this->xpdo->getTableName('CronTabManagerTaskLog')} SET `notification` = '1' WHERE end_run = {$end_run} and notification = 0 and completed = 0;";
-                            $this->xpdo->exec($sql);
                         }
+
+                        // Устанавливаем метку об отправки уведомления для этого задания
+
+                        $add_sql = '';
+                        if (!empty($end_run)) {
+                            $add_sql  = "end_run = {$end_run} and ";
+                        }
+
+                        $sql = "UPDATE {$this->xpdo->getTableName('CronTabManagerTaskLog')} SET `notification` = '1' WHERE {$add_sql}notification = 0 and completed = 0;";
+                        $this->xpdo->exec($sql);
 
                         // Переключаем логи на вывод сообщений об ошибках на экран
                         $this->xpdo->setLogTarget('ECHO');

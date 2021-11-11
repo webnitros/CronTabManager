@@ -82,6 +82,8 @@ class CronTabManagerHomeManagerController extends modExtraManagerController
         $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/widgets/tasks/windows.js');
         $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/widgets/categories/grid.js');
         $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/widgets/categories/windows.js');
+        $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/widgets/notifications/grid.js');
+        $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/widgets/notifications/windows.js');
         $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/widgets/home.panel.js');
         $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/sections/home.js');
 

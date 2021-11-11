@@ -12,6 +12,5 @@
         }
     ],
     "require": {
-        "fotografde/oauth-client": "^1.0"
     }
 }

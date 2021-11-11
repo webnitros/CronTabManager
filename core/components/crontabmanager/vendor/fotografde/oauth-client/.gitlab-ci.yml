@@ -1,4 +1,0 @@
-run_tests:
-  script:
-    - composer install
-    - php -d zend_extension=xdebug.so -d xdebug.max_nesting_level=300 -d xdebug.coverage_enable=On ./vendor/bin/phpunit  --coverage-text --colors=never tests

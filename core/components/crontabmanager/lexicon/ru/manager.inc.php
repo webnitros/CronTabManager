@@ -165,3 +165,34 @@ $_lang['crontabmanager_cron_connector_read_log'] = 'Читать лог файл
 $_lang['crontabmanager_cron_connector_read_log_btn'] = 'Читать лог файл';
 
 $_lang['crontabmanager_cron_connector_args'] = 'Аргументы в виде user=1 resource=2';
+
+
+
+
+
+
+#  Notification
+$_lang['crontabmanager_notifications'] = 'Центр уведомлений';
+$_lang['crontabmanager_notifications_intro_msg'] = 'Список уведомлений об ошибках завершения задач';
+
+$_lang['crontabmanager_notification_id'] = 'Id';
+$_lang['crontabmanager_notification_name'] = 'Наименование';
+$_lang['crontabmanager_notification_read'] = 'Прочитано';
+$_lang['crontabmanager_notification_send_email'] = 'Отправлено на email';
+$_lang['crontabmanager_notification_createdon'] = 'Дата создания';
+$_lang['crontabmanager_notification_notification_emails'] = 'E-mail адреса';
+$_lang['crontabmanager_notification_number_attempts'] = 'Число неудачных запусков';
+$_lang['crontabmanager_notification_description'] = 'Описание';
+$_lang['crontabmanager_notification_active'] = 'Включена';
+$_lang['crontabmanager_notification_err_sub_id'] = 'Вы должны выбрать подписчика.';
+$_lang['crontabmanager_notification_err_nf'] = 'Предмет не найден.';
+$_lang['crontabmanager_notification_err_ns'] = 'Предмет не указан.';
+$_lang['crontabmanager_notification_err_remove'] = 'Ошибка при удалении уведомления.';
+$_lang['crontabmanager_notification_err_save'] = 'Ошибка при сохранения уведомления.';
+
+$_lang['crontabmanager_notifications_remove'] = 'Удалить уведомления';
+$_lang['crontabmanager_notification_remove'] = 'Удалить уведомление';
+
+$_lang['crontabmanager_notification_remove_confirm'] = 'Вы уверены, что хотите удалить эту Уведомление?';
+$_lang['crontabmanager_notifications_remove_confirm'] = 'Вы уверены, что хотите удалить эти Уведомления?';
+$_lang['crontabmanager_notification_filter_read'] = 'Не прочитанные';

@@ -11,8 +11,6 @@ namespace Webnitros\CronTabManager;
 
 use CronTabManager;
 use LogicException;
-use modRestServiceResponse;
-use Webnitros\CronTabManager\Exceptions\AuthException;
 use Webnitros\CronTabManager\Exceptions\RestException;
 
 class Server
@@ -24,18 +22,10 @@ class Server
     {
         $this->CronTabManager = $cronTabManager;
         $cronTabManager->modx->lexicon->load('crontabmanager:rest');
-
-        $config = [
-            'format' => 'json',
-            'realm' => 'CronTabManager'
-        ];
-        $this->server = $this->CronTabManager->modx->getService('rest.server', 'rest.modRestServer', null, $config);
     }
-
 
     public function process()
     {
-
         $status = 200;
         $enable = $this->CronTabManager->modx->getOption('crontabmanager_rest_enable', NULL, false);
         if ($enable) {
@@ -44,8 +34,6 @@ class Server
                 $Rest->process();
                 $response = $Rest->getResponse();
                 $status = $Rest->getStatusCode();
-            } catch (AuthException $e) {
-                $response = $this->CronTabManager->error($e->getMessage());
             } catch (LogicException $e) {
                 $response = $this->CronTabManager->error($e->getMessage());
             } catch (RestException $e) {
@@ -55,7 +43,6 @@ class Server
         } else {
             $response = $this->CronTabManager->error('rest для приложения отключен');
         }
-
         $this->response($response, $status);
     }
 
@@ -80,16 +67,6 @@ class Server
         return (isset(self::$responseCodes[$status])) ? self::$responseCodes[$status] : self::$responseCodes[500];
     }
 
-
-    /**
-     * Map of formats to their parallel content types
-     * @var array
-     */
-    protected static $contentTypes = array(
-        'xml' => 'application/xml',
-        'json' => 'application/json',
-        'qs' => 'text/plain'
-    );
     /**
      * Dictionary of response codes and their text descriptions
      * @var array
