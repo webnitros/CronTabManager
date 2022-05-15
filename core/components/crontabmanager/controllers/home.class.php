@@ -69,25 +69,27 @@ class CronTabManagerHomeManagerController extends modExtraManagerController
      */
     public function loadCustomCssJs()
     {
-        $this->addCss($this->CronTabManager->config['cssUrl'] . 'mgr/main.css');
-        $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/crontabmanager.js');
-        $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/misc/strftime-min-1.3.js');
-        $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/misc/utils.js');
-        $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/misc/combo.js');
-        $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/misc/processorx.js');
-        $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/misc/default.grid.js');
-        $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/misc/default.window.js');
-        $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/widgets/tasks/grid.js');
-        $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/widgets/tasks/logs/grid.js');
-        $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/widgets/tasks/autopauses/grid.js');
-        $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/widgets/tasks/autopauses/windows.js');
-        $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/widgets/tasks/windows.js');
-        $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/widgets/categories/grid.js');
-        $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/widgets/categories/windows.js');
-        $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/widgets/notifications/grid.js');
-        $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/widgets/notifications/windows.js');
-        $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/widgets/home.panel.js');
-        $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/sections/home.js');
+        $v = '?v=1';
+
+        $this->addCss($this->CronTabManager->config['cssUrl'] . 'mgr/main.css'.$v);
+        $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/crontabmanager.js'.$v);
+        $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/misc/strftime-min-1.3.js'.$v);
+        $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/misc/utils.js'.$v);
+        $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/misc/combo.js'.$v);
+        $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/misc/processorx.js'.$v);
+        $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/misc/default.grid.js'.$v);
+        $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/misc/default.window.js'.$v);
+        $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/widgets/tasks/grid.js'.$v);
+        $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/widgets/tasks/logs/grid.js'.$v);
+        $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/widgets/tasks/autopauses/grid.js'.$v);
+        $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/widgets/tasks/autopauses/windows.js'.$v);
+        $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/widgets/tasks/windows.js'.$v);
+        $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/widgets/categories/grid.js'.$v);
+        $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/widgets/categories/windows.js'.$v);
+        $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/widgets/notifications/grid.js'.$v);
+        $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/widgets/notifications/windows.js'.$v);
+        $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/widgets/home.panel.js'.$v);
+        $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/sections/home.js.$v');
 
         $time_server = date('H:i:s', time());
 
