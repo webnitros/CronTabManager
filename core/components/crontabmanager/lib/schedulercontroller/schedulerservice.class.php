@@ -34,8 +34,7 @@ class SchedulerService
     public $user_id = null;
 
     /* @var CronTabManagerTask $CronTabManagerTask */
-    protected $CronTabManagerTask = null;
-
+    public $CronTabManagerTask = null;
 
     /** @var int|string $requestPrimaryKey The primary key requested on the object/id route */
     public $requestPrimaryKey;

@@ -10,7 +10,7 @@ class CronTabManagerTaskGetProcessor extends modObjectGetProcessor
     public $objectType = 'CronTabManagerTask';
     public $classKey = 'CronTabManagerTask';
     public $languageTopics = array('crontabmanager:default');
-    public $permission = 'crontabmanager_view';
+    #public $permission = 'crontabmanager_view';
 
     /**
      * We doing special check of permission

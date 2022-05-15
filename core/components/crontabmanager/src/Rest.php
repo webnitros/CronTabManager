@@ -152,6 +152,7 @@ class Rest
                 case 'play':
                 case 'log':
                 case 'notifications':
+                case 'notice':
                     $method = '_' . $action;
                     if (method_exists($this, $method)) {
                         $run = $method;
@@ -368,13 +369,19 @@ class Rest
 
         /* @var modProcessorResponse $response */
         $response = $this->CronTabManager->runProcessor('mgr/notification/getlist');
-
         if ($response->isError()) {
             $this->failure($response->getMessage());
         } else {
             $res = $this->modx->fromJSON($response->response);
             $this->success('', ['notifications' => $res['results']]);
         }
+    }
+
+
+    protected function _notice()
+    {
+        $count = $this->modx->getCount('CronTabManagerNotification', array('read_application' => 0));
+        $this->success('', ['count' => $count]);
     }
 
     protected function _check()

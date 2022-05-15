@@ -196,3 +196,11 @@ $_lang['crontabmanager_notification_remove'] = 'Удалить уведомле�
 $_lang['crontabmanager_notification_remove_confirm'] = 'Вы уверены, что хотите удалить эту Уведомление?';
 $_lang['crontabmanager_notifications_remove_confirm'] = 'Вы уверены, что хотите удалить эти Уведомления?';
 $_lang['crontabmanager_notification_filter_read'] = 'Не прочитанные';
+
+
+////////////////////////
+//// Install
+////////////////////////
+$_lang['crontabmanager_button_install'] = 'Установить компонент';
+$_lang['crontabmanager_button_download'] = 'Скачать компонент';
+$_lang['crontabmanager_button_download_encryption'] = 'Скачать компонент c шифрацией';

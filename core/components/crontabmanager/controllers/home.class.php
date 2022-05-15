@@ -89,6 +89,8 @@ class CronTabManagerHomeManagerController extends modExtraManagerController
 
         $time_server = date('H:i:s', time());
 
+        $this->CronTabManager->config['help_buttons'] = ($buttons = $this->getButtons()) ? $buttons : '';
+
         $this->addHtml('<script type="text/javascript">
         CronTabManager.config = ' . json_encode($this->CronTabManager->config) . ';
         CronTabManager.config.connector_url = "' . $this->CronTabManager->config['connectorUrl'] . '";
@@ -106,5 +108,32 @@ class CronTabManagerHomeManagerController extends modExtraManagerController
     {
         $this->content .= '<div id="crontabmanager-panel-home-div"></div>';
         return '';
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getButtons()
+    {
+        $buttons = null;
+        $name = 'CronTabManager';
+        $path = "Extras/{$name}/_build/build.php";
+        if (file_exists(MODX_BASE_PATH . $path)) {
+            $site_url = $this->modx->getOption('site_url').$path;
+            $buttons[] = [
+                'url' => $site_url,
+                'text' => $this->modx->lexicon('crontabmanager_button_install'),
+            ];
+            $buttons[] = [
+                'url' => $site_url.'?download=1&encryption_disabled=1',
+                'text' => $this->modx->lexicon('crontabmanager_button_download'),
+            ];
+            $buttons[] = [
+                'url' => $site_url.'?download=1',
+                'text' => $this->modx->lexicon('crontabmanager_button_download_encryption'),
+            ];
+        }
+        return $buttons;
     }
 }

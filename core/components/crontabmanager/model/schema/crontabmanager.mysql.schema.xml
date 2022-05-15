@@ -64,6 +64,8 @@
         <field key="completed" dbtype="tinyint" precision="1" phptype="boolean" null="true" default="0"/>
         <field key="notification" dbtype="tinyint" precision="1" phptype="boolean" null="true" default="0"/>
 
+        <field key="hash" dbtype="char" precision="32" phptype="string" null="true" default="" index="index"/>
+
         <index alias="last_run" name="last_run" primary="false" unique="false" type="BTREE">
             <column key="last_run" length="" collation="A" null="false"/>
         </index>
@@ -81,6 +83,9 @@
         </index>
         <index alias="createdon" name="createdon" primary="false" unique="false" type="BTREE">
             <column key="createdon" length="" collation="A" null="false"/>
+        </index>
+        <index alias="hash" name="hash" primary="false" unique="false" type="BTREE">
+            <column key="hash" length="" collation="A" null="false"/>
         </index>
 
         <aggregate alias="Task" class="CronTabManagerTask" local="task_id" foreign="id" cardinality="one" owner="foreign"/>

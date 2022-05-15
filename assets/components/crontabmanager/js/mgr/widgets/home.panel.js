@@ -56,3 +56,72 @@ CronTabManager.panel.Home = function (config) {
 };
 Ext.extend(CronTabManager.panel.Home, MODx.Panel);
 Ext.reg('crontabmanager-panel-home', CronTabManager.panel.Home);
+
+
+
+Ext.onReady(function () {
+
+    if (CronTabManager.config.help_buttons.length > 0) {
+
+
+
+        CronTabManager.buttons.help = function (config) {
+            config = config || {}
+            for (var i = 0; i < CronTabManager.config.help_buttons.length; i++) {
+                if (!CronTabManager.config.help_buttons.hasOwnProperty(i)) {
+                    continue
+                }
+                CronTabManager.config.help_buttons[i]['handler'] = this.loadPaneURl
+            }
+            Ext.applyIf(config, {
+                buttons: CronTabManager.config.help_buttons
+            })
+            CronTabManager.buttons.help.superclass.constructor.call(this, config)
+        }
+
+        Ext.extend(CronTabManager.buttons.help, MODx.toolbar.ActionButtons, {
+            loadPaneURl: function (b) {
+                var url = b.url;
+                var text = b.text;
+                if (!url || !url.length) { return false }
+                if (url.substring(0, 4) !== 'http') {
+                    url = MODx.config.base_help_url + url
+                }
+                MODx.helpWindow = new Ext.Window({
+                    title: text
+                    , width: 850
+                    , height: 350
+                    , resizable: true
+                    , maximizable: true
+                    , modal: false
+                    , layout: 'fit'
+                    , bodyStyle: 'padding: 0;'
+                    , items: [{
+                        xtype: 'container',
+                        layout: {
+                            type: 'vbox',
+                            align: 'stretch'
+                        },
+                        width: '100%',
+                        height: '100%',
+                        items: [{
+                            autoEl: {
+                                tag: 'iframe',
+                                src: url,
+                                width: '100%',
+                                height: '100%',
+                                frameBorder: 0
+                            }
+                        }]
+                    }]
+                    //,html: '<iframe src="' + url + '" width="100%" height="100%" frameborder="0"></iframe>'
+                })
+                MODx.helpWindow.show(b)
+                return true
+            }
+        })
+
+        Ext.reg('crontabmanager-buttons-help', CronTabManager.buttons.help)
+        MODx.add('crontabmanager-buttons-help')
+    }
+})

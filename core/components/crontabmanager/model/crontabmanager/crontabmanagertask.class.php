@@ -150,11 +150,15 @@ class CronTabManagerTask extends xPDOSimpleObject
             if (!$completed) {
                 /* @var CronTabManagerTaskLog $TaskLog */
 
+                // Записываем hash для перехода по ссылке
+                $hash = md5(time() . $task_id . $last_run . $end_run);
+
                 if (!$TaskLog = $this->xpdo->getObject('CronTabManagerTaskLog', $criteria)) {
                     $TaskLog = $this->xpdo->newObject('CronTabManagerTaskLog');
                     $TaskLog->set('last_run', $last_run);
                     $TaskLog->set('end_run', $end_run);
                     $TaskLog->set('task_id', $task_id);
+                    $TaskLog->set('hash', $hash);
                     $TaskLog->save();
                 }
 
@@ -200,8 +204,8 @@ class CronTabManagerTask extends xPDOSimpleObject
                         if (!empty($emails)) {
 
                             $site_url = $this->getOption('site_url');
-                            $blockup_url = $site_url . 'assets/components/crontabmanager/blockup.php';
-                            $log_url = $site_url . 'assets/components/crontabmanager/log.php';
+                            $blockup_url = $site_url . 'assets/components/crontabmanager/action/blockup.php';
+                            $log_url = $site_url . 'assets/components/crontabmanager/action/log.php';
 
                             if (!empty($emails)) {
                                 $data = array(
@@ -217,6 +221,7 @@ class CronTabManagerTask extends xPDOSimpleObject
                                     'task_time' => implode(' ', $this->get(array('minutes', 'hours', 'days', 'months', 'weeks'))),
                                     'task_file_log' => $this->getFileLogPath(),
                                     'log_url' => $log_url,
+                                    'hash' => $hash,
                                     'add_output' => '',
                                 );
 
@@ -246,7 +251,7 @@ class CronTabManagerTask extends xPDOSimpleObject
 
                         $add_sql = '';
                         if (!empty($end_run)) {
-                            $add_sql  = "end_run = {$end_run} and ";
+                            $add_sql = "end_run = {$end_run} and ";
                         }
 
                         $sql = "UPDATE {$this->xpdo->getTableName('CronTabManagerTaskLog')} SET `notification` = '1' WHERE {$add_sql}notification = 0 and completed = 0;";
