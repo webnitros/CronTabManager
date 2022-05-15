@@ -4,7 +4,7 @@ CronTabManager.window.CreateTask = function (config) {
 
     Ext.applyIf(config, {
         title: _('crontabmanager_task_create'),
-        width: 800,
+        width: 1000,
         cls: 'crontabmanager_windows',
         baseParams: {
             action: 'mgr/task/create',
@@ -26,6 +26,12 @@ Ext.extend(CronTabManager.window.CreateTask, CronTabManager.window.Default, {
                 title: _('crontabmanager_task_log'),
                 items: [{
                     xtype: 'crontabmanager-grid-tasks-logs',
+                    record: config.record,
+                }]
+            }, {
+                title: _('crontabmanager_task_autopause'),
+                items: [{
+                    xtype: 'crontabmanager-grid-tasks-autopauses',
                     record: config.record,
                 }]
             }, {
@@ -136,7 +142,8 @@ Ext.extend(CronTabManager.window.CreateTask, CronTabManager.window.Default, {
                     }
                 ]
                 }]
-            }, {
+            },
+            {
                 xtype: 'textarea',
                 fieldLabel: _('crontabmanager_task_description'),
                 name: 'description',

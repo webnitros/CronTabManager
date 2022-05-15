@@ -3,12 +3,12 @@
 /**
  * Get a list of Tasks
  */
-class CronTabManagerTaskLogGetListProcessor extends modObjectGetListProcessor
+class CronTabManagerAutoPauseGetListProcessor extends modObjectGetListProcessor
 {
     /* @var CronTabManager $CronTabManager */
     public $CronTabManager = null;
-    public $objectType = 'CronTabManagerTaskLog';
-    public $classKey = 'CronTabManagerTaskLog';
+    public $objectType = 'CronTabManagerAutoPause';
+    public $classKey = 'CronTabManagerAutoPause';
     public $defaultSortField = 'createdon';
     public $defaultSortDirection = 'DESC';
     public $permission = 'crontabmanager_list';
@@ -45,22 +45,12 @@ class CronTabManagerTaskLogGetListProcessor extends modObjectGetListProcessor
      */
     public function prepareQueryBeforeCount(xPDOQuery $c)
     {
-        $orderColumns = $this->modx->getSelectColumns('CronTabManagerTaskLog', 'CronTabManagerTaskLog', '', array(), false);
+        $orderColumns = $this->modx->getSelectColumns('CronTabManagerAutoPause', 'CronTabManagerAutoPause', '', array(), false);
         $c->select($orderColumns);
 
-        $c->leftJoin('CronTabManagerAutoPause', 'AutoPause', 'AutoPause.id = CronTabManagerTaskLog.auto_pause_id');
-        $c->select('AutoPause.when as autopause_when,AutoPause.from as autopause_from,AutoPause.to as autopause_to');
-
-        $completed = $this->setCheckbox('completed');
+        $completed = $this->setCheckbox('active');
         if (!empty($completed)) {
-            $c->where(array('completed' => 0));
-        }
-
-        $query = $this->getProperty('query');
-        if (!empty($query)) {
-            $c->where(array(
-                'id' => (int)$query
-            ));
+            $c->where(array('active' => 0));
         }
 
         $task_id = $this->getProperty('task_id');
@@ -68,14 +58,13 @@ class CronTabManagerTaskLogGetListProcessor extends modObjectGetListProcessor
             $c->where(array('task_id' => $task_id));
         }
 
-        #auto_pause_id
         return $c;
     }
 
 
     public function prepareRow(xPDOObject $object)
     {
-        /* @var CronTabManagerTaskLog $object */
+        /* @var CronTabManagerAutoPause $object */
         $array = $object->toArray();
         $array['actions'] = array();
 
@@ -83,20 +72,26 @@ class CronTabManagerTaskLogGetListProcessor extends modObjectGetListProcessor
         $array['end_run'] = !empty($array['end_run']) ? date('Y-m-d H:i:s', $array['end_run']) : '';
         $array['last_run'] = !empty($array['last_run']) ? date('Y-m-d H:i:s', $array['last_run']) : '';
 
-        $pause = null;
-        if (!empty($array['auto_pause_id']) && !empty($array['autopause_when'])) {
-            $when = $this->modx->lexicon('crontabmanager_when_' . $array['autopause_when']);
-            $pause = $when . ', ' . $this->modx->lexicon('crontabmanager_auto_pause_from') . ' ' . $array['autopause_from'] . ' ' . $this->modx->lexicon('crontabmanager_auto_pause_to') . '' . $array['autopause_to'];
-        }
-        $array['pause'] = $pause;
+
+
+        // Edit
+        $array['actions'][] = array(
+            'cls' => '',
+            'icon' => 'icon icon-edit',
+            'title' => $this->modx->lexicon('crontabmanager_task_autopause_update'),
+            'action' => 'updateItem',
+            'button' => true,
+            'menu' => true,
+        );
+
 
 
         // Remove
         $array['actions'][] = array(
             'cls' => '',
             'icon' => 'icon icon-trash-o action-red',
-            'title' => $this->modx->lexicon('crontabmanager_task_log_remove'),
-            'multiple' => $this->modx->lexicon('crontabmanager_task_logs_remove'),
+            'title' => $this->modx->lexicon('crontabmanager_task_autopause_remove'),
+            'multiple' => $this->modx->lexicon('crontabmanager_task_autopauses_remove'),
             'action' => 'removeItem',
             'button' => false,
             'menu' => true,
@@ -107,4 +102,4 @@ class CronTabManagerTaskLogGetListProcessor extends modObjectGetListProcessor
 
 }
 
-return 'CronTabManagerTaskLogGetListProcessor';
+return 'CronTabManagerAutoPauseGetListProcessor';

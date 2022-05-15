@@ -41,6 +41,7 @@
         <aggregate alias="Category" class="CronTabManagerCategory" local="parent" foreign="id" cardinality="one" owner="foreign"/>
         <composite alias="Logs" class="CronTabManagerTaskLog" local="id" foreign="task_id" cardinality="many" owner="local"/>
         <composite alias="Notifications" class="CronTabManagerNotification" local="id" foreign="task_id" cardinality="many" owner="local"/>
+        <composite alias="AutoPause" class="CronTabManagerAutoPause" local="id" foreign="task_id" cardinality="many" owner="local"/>
     </object>
 
     <object class="CronTabManagerCategory" table="ctma_categories" extends="xPDOSimpleObject">
@@ -63,6 +64,9 @@
         <field key="updatedon" dbtype="int" precision="20" phptype="timestamp" null="false" default="0"/>
         <field key="completed" dbtype="tinyint" precision="1" phptype="boolean" null="true" default="0"/>
         <field key="notification" dbtype="tinyint" precision="1" phptype="boolean" null="true" default="0"/>
+        <field key="auto_pause" dbtype="tinyint" precision="1" phptype="boolean" null="true" default="0"/>
+
+        <field key="auto_pause_id" dbtype="int" precision="10" phptype="integer" null="true" default="0"/>
 
         <field key="hash" dbtype="char" precision="32" phptype="string" null="true" default="" index="index"/>
 
@@ -75,6 +79,14 @@
         <index alias="task_id" name="task_id" primary="false" unique="false" type="BTREE">
             <column key="task_id" length="" collation="A" null="false"/>
         </index>
+
+        <index alias="auto_pause" name="auto_pause" primary="false" unique="false" type="BTREE">
+            <column key="auto_pause" length="" collation="A" null="false"/>
+        </index>
+        <index alias="auto_pause_id" name="auto_pause_id" primary="false" unique="false" type="BTREE">
+            <column key="auto_pause_id" length="" collation="A" null="false"/>
+        </index>
+
         <index alias="completed" name="completed" primary="false" unique="false" type="BTREE">
             <column key="completed" length="" collation="A" null="false"/>
         </index>
@@ -89,6 +101,7 @@
         </index>
 
         <aggregate alias="Task" class="CronTabManagerTask" local="task_id" foreign="id" cardinality="one" owner="foreign"/>
+        <aggregate alias="AutoPause" class="CronTabManagerAutoPause" local="auto_pause_id" foreign="id" cardinality="one" owner="foreign"/>
     </object>
 
     <object class="CronTabManagerToken" table="ctma_api_token" extends="xPDOSimpleObject">
@@ -140,6 +153,30 @@
         <index alias="read_application" name="read_application" primary="false" unique="false" type="BTREE">
             <column key="read_application" length="" collation="A" null="false"/>
         </index>
+        <aggregate alias="Task" class="CronTabManagerTask" local="task_id" foreign="id" cardinality="one" owner="foreign"/>
+    </object>
+
+
+    <object class="CronTabManagerAutoPause" table="ctma_task_auto_pause" extends="xPDOSimpleObject">
+        <field key="task_id" dbtype="int" precision="10" phptype="integer" null="true" default="0"/>
+        <field key="createdon" dbtype="int" precision="20" phptype="timestamp" null="false" default="0"/>
+        <field key="updatedon" dbtype="int" precision="20" phptype="timestamp" null="false" default="0"/>
+        <field key="when" dbtype="varchar" precision="32" phptype="string" null="false" default=""/>
+        <field key="from" dbtype="varchar" precision="32" phptype="string" null="false" default=""/>
+        <field key="to" dbtype="varchar" precision="32" phptype="string" null="false" default=""/>
+        <field key="active" dbtype="tinyint" precision="1" phptype="boolean" null="true" default="1"/>
+
+        <index alias="task_id" name="task_id" primary="false" unique="false" type="BTREE">
+            <column key="task_id" length="" collation="A" null="false"/>
+        </index>
+        <index alias="createdon" name="createdon" primary="false" unique="false" type="BTREE">
+            <column key="createdon" length="" collation="A" null="false"/>
+        </index>
+
+        <index alias="active" name="active" primary="false" unique="false" type="BTREE">
+            <column key="active" length="" collation="A" null="false"/>
+        </index>
+
         <aggregate alias="Task" class="CronTabManagerTask" local="task_id" foreign="id" cardinality="one" owner="foreign"/>
     </object>
 

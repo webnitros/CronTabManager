@@ -79,6 +79,8 @@ class CronTabManagerHomeManagerController extends modExtraManagerController
         $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/misc/default.window.js');
         $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/widgets/tasks/grid.js');
         $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/widgets/tasks/logs/grid.js');
+        $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/widgets/tasks/autopauses/grid.js');
+        $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/widgets/tasks/autopauses/windows.js');
         $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/widgets/tasks/windows.js');
         $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/widgets/categories/grid.js');
         $this->addJavascript($this->CronTabManager->config['jsUrl'] . 'mgr/widgets/categories/windows.js');
@@ -120,17 +122,17 @@ class CronTabManagerHomeManagerController extends modExtraManagerController
         $name = 'CronTabManager';
         $path = "Extras/{$name}/_build/build.php";
         if (file_exists(MODX_BASE_PATH . $path)) {
-            $site_url = $this->modx->getOption('site_url').$path;
+            $site_url = $this->modx->getOption('site_url') . $path;
             $buttons[] = [
                 'url' => $site_url,
                 'text' => $this->modx->lexicon('crontabmanager_button_install'),
             ];
             $buttons[] = [
-                'url' => $site_url.'?download=1&encryption_disabled=1',
+                'url' => $site_url . '?download=1&encryption_disabled=1',
                 'text' => $this->modx->lexicon('crontabmanager_button_download'),
             ];
             $buttons[] = [
-                'url' => $site_url.'?download=1',
+                'url' => $site_url . '?download=1',
                 'text' => $this->modx->lexicon('crontabmanager_button_download_encryption'),
             ];
         }

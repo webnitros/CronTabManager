@@ -42,6 +42,10 @@ class SchedulerService
     /* @var boolean|null $mode */
     public $mode = null;
 
+
+    /* @var CronTabManagerAutoPause|null $auto_pause paused automatically task */
+    public $auto_pause = false;
+
     /**
      * @param CronTabManager $CronTabManager
      * @param array $config
@@ -212,11 +216,19 @@ class SchedulerService
         }
 
 
+        // 2. Проверка автоматической паузы
+        $autoPause = new \Webnitros\CronTabManager\AutoPause\Builder($task);
+        if ($this->auto_pause = $autoPause->getAutoPause()) {
+            $task->set('auto_pause', true);
+            $task->set('auto_pause_id', $this->auto_pause->get('id'));
+        }
+
         if ($this->isSetCompletionTime) {
             $task->start();
         }
 
-        // 2. Запуск контроллера
+
+        // 2.1 Запуск контроллера
         $response = $method->invoke($controller);
 
 
@@ -350,7 +362,15 @@ class SchedulerService
             $out .= "queryTime: {$queryTime}" . $prefix;
             $out .= "phpTime: {$phpTime}" . $prefix;
         }
+
         $out .= "TotalTime: {$totalTime}" . $prefix;
+
+
+        if ($this->auto_pause) {
+
+            $str = $this->auto_pause->str();
+            $out .= "<b style='color: green'>Paused automatically: </b>" . $str . $prefix;
+        }
         return $out;
     }
 

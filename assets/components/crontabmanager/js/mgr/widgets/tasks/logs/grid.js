@@ -1,7 +1,7 @@
 CronTabManager.grid.LogsSync1c = function (config) {
-    config = config || {};
+    config = config || {}
     if (!config.id) {
-        config.id = 'crontabmanager-grid-tasks-logs';
+        config.id = 'crontabmanager-grid-tasks-logs'
     }
 
     Ext.applyIf(config, {
@@ -18,25 +18,35 @@ CronTabManager.grid.LogsSync1c = function (config) {
         stateful: true,
         stateId: config.id,
         pageSize: 5,
-    });
-    CronTabManager.grid.LogsSync1c.superclass.constructor.call(this, config);
-};
+    })
+    CronTabManager.grid.LogsSync1c.superclass.constructor.call(this, config)
+}
 Ext.extend(CronTabManager.grid.LogsSync1c, CronTabManager.grid.Default, {
 
     getFields: function () {
-        return ['id', 'task_id', 'last_run', 'end_run', 'createdon','updatedon','completed','notification', 'actions'];
+        return ['id', 'task_id', 'last_run', 'end_run', 'auto_pause', 'pause', 'auto_pause_id', 'createdon', 'updatedon', 'completed', 'notification', 'actions']
     },
 
     getColumns: function () {
         return [
-            {header: _('crontabmanager_task_log_id'), dataIndex: 'id', width: 20, sortable: true,hidden: true},
+            {header: _('crontabmanager_task_log_id'), dataIndex: 'id', width: 20, sortable: true, hidden: true},
             {header: _('crontabmanager_task_log_last_run'), dataIndex: 'last_run', sortable: true, width: 100, renderer: CronTabManager.utils.formatDate},
             {header: _('crontabmanager_task_log_end_run'), dataIndex: 'end_run', sortable: true, width: 100, renderer: CronTabManager.utils.formatDate},
-            {header: _('crontabmanager_task_log_completed'), dataIndex: 'completed', sortable: true,width: 50, renderer: this._renderBoolean},
-            {header: _('crontabmanager_task_log_notification'), dataIndex: 'notification', sortable: true,width: 50, renderer: this._renderBoolean},
+            {header: _('crontabmanager_task_log_completed'), dataIndex: 'completed', sortable: true, width: 50, renderer: this._renderBoolean},
+            {
+                header: _('crontabmanager_task_log_auto_pause'), dataIndex: 'auto_pause', sortable: true, width: 100, renderer: function (val, data, row) {
+                    var auto_pause = row.data.auto_pause
+                    if (!auto_pause) {
+                        return auto_pause
+                    }
+                    var pause = row.data.pause
+                    return '<span class="green">Да</span><br><small style="color: grey; font-style: italic">' + pause + '</small>'
+                }
+            },
+            {header: _('crontabmanager_task_log_notification'), dataIndex: 'notification', sortable: true, width: 50, renderer: this._renderBoolean},
             {header: _('crontabmanager_task_log_createdon'), dataIndex: 'createdon', sortable: true, width: 70, renderer: CronTabManager.utils.formatDate},
-            {header: _('crontabmanager_task_log_updatedon'), dataIndex: 'updatedon', sortable: true, width: 70,hidden: true, renderer: CronTabManager.utils.formatDate},
-        ];
+            {header: _('crontabmanager_task_log_updatedon'), dataIndex: 'updatedon', sortable: true, width: 70, hidden: true, renderer: CronTabManager.utils.formatDate},
+        ]
     },
 
     getTopBar: function () {
@@ -44,21 +54,19 @@ Ext.extend(CronTabManager.grid.LogsSync1c, CronTabManager.grid.Default, {
             text: '<i class="icon icon-remove"></i>&nbsp;' + _('crontabmanager_task_logs_remove'),
             handler: this.removeAllItem,
             scope: this
-        }, '->', this.getSearchField()];
+        }, '->', this.getSearchField()]
     },
-    _renderBoolean: function(value, cell, row) {
-        var color, text;
+    _renderBoolean: function (value, cell, row) {
+        var color, text
         if (value == 0 || value == false || value == undefined) {
-            color = 'red';
-            text = _('no');
+            color = 'red'
+            text = _('no')
+        } else {
+            color = 'green'
+            text = _('yes')
         }
-        else {
-            color = 'green';
-            text = _('yes');
-        }
-        return String.format('<span class="{0}">{1}</span>', color, text);
+        return String.format('<span class="{0}">{1}</span>', color, text)
     },
-
 
     removeAllItem: function () {
         MODx.Ajax.request({
@@ -70,7 +78,7 @@ Ext.extend(CronTabManager.grid.LogsSync1c, CronTabManager.grid.Default, {
             listeners: {
                 success: {
                     fn: function () {
-                        this.refresh();
+                        this.refresh()
                     }, scope: this
                 }
             }
@@ -78,9 +86,9 @@ Ext.extend(CronTabManager.grid.LogsSync1c, CronTabManager.grid.Default, {
     },
 
     removeItem: function () {
-        var ids = this._getSelectedIds();
+        var ids = this._getSelectedIds()
         if (!ids.length) {
-            return false;
+            return false
         }
 
         MODx.Ajax.request({
@@ -92,14 +100,14 @@ Ext.extend(CronTabManager.grid.LogsSync1c, CronTabManager.grid.Default, {
             listeners: {
                 success: {
                     fn: function () {
-                        this.refresh();
+                        this.refresh()
                     }, scope: this
                 }
             }
         })
 
-        return true;
+        return true
     },
 
-});
-Ext.reg('crontabmanager-grid-tasks-logs', CronTabManager.grid.LogsSync1c);
+})
+Ext.reg('crontabmanager-grid-tasks-logs', CronTabManager.grid.LogsSync1c)

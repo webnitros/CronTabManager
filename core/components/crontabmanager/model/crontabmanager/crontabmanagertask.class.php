@@ -162,118 +162,126 @@ class CronTabManagerTask extends xPDOSimpleObject
                     $TaskLog->save();
                 }
 
+                // Если сработала автоматическая пауза
+                $auto_pause = $this->get('auto_pause');
+                $auto_pause_id = $this->get('auto_pause_id');
+                if ($auto_pause === true) {
+                    $completed = true;
+                } else {
 
-                // Проверяем разрешение отправки уведомлений
-                $notification_enable = $this->get('notification_enable');
+                    // Проверяем разрешение отправки уведомлений
+                    $notification_enable = $this->get('notification_enable');
 
-                // Если задание завершилось то меняется  end_run
-                if ($notification_enable and $max_number_attempts > 0) {
+                    // Если задание завершилось то меняется  end_run
+                    if ($notification_enable and $max_number_attempts > 0) {
 
-                    // Если задание превысело максимальное количество попыток то отправляем сообщение администратору
-                    $criteria_notifications = array(
-                        'task_id' => $task_id,
-                        'end_run' => $end_run,
-                        'completed' => 0,
-                        'notification' => 0,
-                    );
-                    if ($max_number_attempts <= $this->xpdo->getCount('CronTabManagerTaskLog', $criteria_notifications)) {
+                        // Если задание превысело максимальное количество попыток то отправляем сообщение администратору
+                        $criteria_notifications = array(
+                            'task_id' => $task_id,
+                            'end_run' => $end_run,
+                            'completed' => 0,
+                            'notification' => 0,
+                        );
+                        if ($max_number_attempts <= $this->xpdo->getCount('CronTabManagerTaskLog', $criteria_notifications)) {
 
-                        // Переключаем логи на вывод сообщений об ошибках в файл
-                        $this->xpdo->setLogTarget('FILE');
+                            // Переключаем логи на вывод сообщений об ошибках в файл
+                            $this->xpdo->setLogTarget('FILE');
 
-                        $emails = array();
-                        $notification_emails = trim($this->get('notification_emails'));
-                        if (!empty($notification_emails)) {
-                            $notification_emails = explode(',', $notification_emails);
-                            $notification_emails = array_map('trim', $notification_emails);
-                            $emails = array_merge($emails, $notification_emails);
-                        }
+                            $emails = array();
+                            $notification_emails = trim($this->get('notification_emails'));
+                            if (!empty($notification_emails)) {
+                                $notification_emails = explode(',', $notification_emails);
+                                $notification_emails = array_map('trim', $notification_emails);
+                                $emails = array_merge($emails, $notification_emails);
+                            }
 
-                        $email_administrator = trim($this->getOption('crontabmanager_email_administrator', null, ''));
-                        if (!empty($email_administrator)) {
-                            $email_administrator = explode(',', $email_administrator);
-                            $email_administrator = array_map('trim', $email_administrator);
-                            $emails = array_merge($emails, $email_administrator);
-                        }
+                            $email_administrator = trim($this->getOption('crontabmanager_email_administrator', null, ''));
+                            if (!empty($email_administrator)) {
+                                $email_administrator = explode(',', $email_administrator);
+                                $email_administrator = array_map('trim', $email_administrator);
+                                $emails = array_merge($emails, $email_administrator);
+                            }
 
 
-                        /* @var CronTabManager $CronTabManager */
-                        $CronTabManager = $this->xpdo->getService('crontabmanager', 'CronTabManager', MODX_CORE_PATH . 'components/crontabmanager/model/');
-                        $CronTabManager->createNotice($this, $max_number_attempts, $emails);
-
-                        if (!empty($emails)) {
-
-                            $site_url = $this->getOption('site_url');
-                            $blockup_url = $site_url . 'assets/components/crontabmanager/action/blockup.php';
-                            $log_url = $site_url . 'assets/components/crontabmanager/action/log.php';
+                            /* @var CronTabManager $CronTabManager */
+                            $CronTabManager = $this->xpdo->getService('crontabmanager', 'CronTabManager', MODX_CORE_PATH . 'components/crontabmanager/model/');
+                            $CronTabManager->createNotice($this, $max_number_attempts, $emails);
 
                             if (!empty($emails)) {
-                                $data = array(
-                                    'site_url' => $site_url,
-                                    'blockup_url' => $blockup_url,
-                                    'task_id' => $this->get('id'),
-                                    'task_category_name' => ($tmp = $this->loadCategory()) ? $tmp->get('name') : '',
-                                    'task_last_run' => $this->get('last_run'),
-                                    'task_end_run' => date('d-m-Y H:i:s', strtotime($this->get('end_run'))),
-                                    'task_path_task' => $this->get('path_task'),
-                                    'task_max_number_attempts' => $max_number_attempts,
-                                    'task_description' => $this->get('description'),
-                                    'task_time' => implode(' ', $this->get(array('minutes', 'hours', 'days', 'months', 'weeks'))),
-                                    'task_file_log' => $this->getFileLogPath(),
-                                    'log_url' => $log_url,
-                                    'hash' => $hash,
-                                    'add_output' => '',
-                                );
 
-                                if (!empty($this->get('add_output_email'))) {
-                                    $add_output = $this->readLogFileFormat();
-                                    if (!empty($add_output)) {
-                                        $data['add_output'] = '<br><h3>Вывод из лог файла</h3>----------------<br>' . $add_output . '<br>----------------<br>';
+                                $site_url = $this->getOption('site_url');
+                                $blockup_url = $site_url . 'assets/components/crontabmanager/action/blockup.php';
+                                $log_url = $site_url . 'assets/components/crontabmanager/action/log.php';
+
+                                if (!empty($emails)) {
+                                    $data = array(
+                                        'site_url' => $site_url,
+                                        'blockup_url' => $blockup_url,
+                                        'task_id' => $this->get('id'),
+                                        'task_category_name' => ($tmp = $this->loadCategory()) ? $tmp->get('name') : '',
+                                        'task_last_run' => $this->get('last_run'),
+                                        'task_end_run' => date('d-m-Y H:i:s', strtotime($this->get('end_run'))),
+                                        'task_path_task' => $this->get('path_task'),
+                                        'task_max_number_attempts' => $max_number_attempts,
+                                        'task_description' => $this->get('description'),
+                                        'task_time' => implode(' ', $this->get(array('minutes', 'hours', 'days', 'months', 'weeks'))),
+                                        'task_file_log' => $this->getFileLogPath(),
+                                        'log_url' => $log_url,
+                                        'hash' => $hash,
+                                        'add_output' => '',
+                                    );
+
+                                    if (!empty($this->get('add_output_email'))) {
+                                        $add_output = $this->readLogFileFormat();
+                                        if (!empty($add_output)) {
+                                            $data['add_output'] = '<br><h3>Вывод из лог файла</h3>----------------<br>' . $add_output . '<br>----------------<br>';
+                                        }
                                     }
+
+                                    $subject = $CronTabManager->modx->lexicon('crontabmanager_email_notifications_subject', $data);
+                                    $message = $CronTabManager->modx->lexicon('crontabmanager_email_notifications_message', $data);
+                                    if (!empty($this->get('message'))) {
+                                        $message = $this->get('message') . '<hr>' . $message;
+                                    }
+
+
+                                    $response = $CronTabManager->sendEmail($emails, $subject, $message);
+                                    if (!$response['success']) {
+                                        $CronTabManager->modx->log(xPDO::LOG_LEVEL_ERROR, "[CronTabManager] Error send email notofocation", '', __METHOD__, __FILE__, __LINE__);
+                                    }
+
                                 }
-
-                                $subject = $CronTabManager->modx->lexicon('crontabmanager_email_notifications_subject', $data);
-                                $message = $CronTabManager->modx->lexicon('crontabmanager_email_notifications_message', $data);
-                                if (!empty($this->get('message'))) {
-                                    $message = $this->get('message') . '<hr>' . $message;
-                                }
-
-
-                                $response = $CronTabManager->sendEmail($emails, $subject, $message);
-                                if (!$response['success']) {
-                                    $CronTabManager->modx->log(xPDO::LOG_LEVEL_ERROR, "[CronTabManager] Error send email notofocation", '', __METHOD__, __FILE__, __LINE__);
-                                }
-
                             }
+
+                            // Устанавливаем метку об отправки уведомления для этого задания
+
+                            $add_sql = '';
+                            if (!empty($end_run)) {
+                                $add_sql = "end_run = {$end_run} and ";
+                            }
+
+                            $sql = "UPDATE {$this->xpdo->getTableName('CronTabManagerTaskLog')} SET `notification` = '1' WHERE {$add_sql}notification = 0 and completed = 0;";
+                            $this->xpdo->exec($sql);
+
+                            // Переключаем логи на вывод сообщений об ошибках на экран
+                            $this->xpdo->setLogTarget('ECHO');
                         }
-
-                        // Устанавливаем метку об отправки уведомления для этого задания
-
-                        $add_sql = '';
-                        if (!empty($end_run)) {
-                            $add_sql = "end_run = {$end_run} and ";
-                        }
-
-                        $sql = "UPDATE {$this->xpdo->getTableName('CronTabManagerTaskLog')} SET `notification` = '1' WHERE {$add_sql}notification = 0 and completed = 0;";
-                        $this->xpdo->exec($sql);
-
-                        // Переключаем логи на вывод сообщений об ошибках на экран
-                        $this->xpdo->setLogTarget('ECHO');
                     }
                 }
-
             }
-
 
             // № 2 Обновляем запись в логах true
             if ($completed) {
                 if ($TaskLog = $this->xpdo->getObject('CronTabManagerTaskLog', $criteria)) {
                     $TaskLog->set('completed', true);
+                    if ($auto_pause) {
+                        $TaskLog->set('auto_pause', $auto_pause);
+                        $TaskLog->set('auto_pause_id', $auto_pause_id);
+                    }
                     $TaskLog->save();
                 }
 
             }
-
         }
     }
 
