@@ -10,7 +10,7 @@ class CronTabManagerTaskBlockUpProcessor extends modObjectProcessor
     public $objectType = 'CronTabManagerTask';
     public $classKey = 'CronTabManagerTask';
     public $languageTopics = array('crontabmanager:manager');
-    public $permission = 'crontabmanager_add_blocked';
+    #public $permission = 'crontabmanager_add_blocked';
 
 
     /** {@inheritDoc} */

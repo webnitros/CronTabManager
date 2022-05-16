@@ -10,7 +10,7 @@ class CronTabManagerTaskUnBlockUpProcessor extends modObjectProcessor
     public $objectType = 'CronTabManagerTask';
     public $classKey = 'CronTabManagerTask';
     public $languageTopics = array('crontabmanager:manager');
-    public $permission = 'crontabmanager_un_blocked';
+    #public $permission = 'crontabmanager_un_blocked';
 
 
     /** {@inheritDoc} */

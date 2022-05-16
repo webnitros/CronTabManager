@@ -37,7 +37,7 @@ Ext.extend(CronTabManager.grid.LogsSync1c, CronTabManager.grid.Default, {
                 header: _('crontabmanager_task_log_auto_pause'), dataIndex: 'auto_pause', sortable: true, width: 100, renderer: function (val, data, row) {
                     var auto_pause = row.data.auto_pause
                     if (!auto_pause) {
-                        return auto_pause
+                        return '<span class="red">Нет</span>'
                     }
                     var pause = row.data.pause
                     return '<span class="green">Да</span><br><small style="color: grey; font-style: italic">' + pause + '</small>'
