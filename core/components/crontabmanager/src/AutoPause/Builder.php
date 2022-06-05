@@ -25,10 +25,7 @@ class Builder
     public function __construct(CronTabManagerTask $Task)
     {
         $this->task = $Task;
-
-        $this->Current = Carbon::now();
-        $this->Current->setTimezone('4');
-
+        $this->Current = Carbon::now($this->timezone);
     }
 
     /**
@@ -119,7 +116,11 @@ class Builder
         if (!$HitDate && is_numeric($week)) {
             $From = $this->dateTime($Pause->get('from'), $week);
             $To = $this->dateTime($Pause->get('to'), $week);
-            $HitDate = $this->current()->between($From, $To);
+            // Если дата младше(Может быть младше так как установка времени через string)
+            if ($From->gt($To)) {
+                $To->addDay(1);
+            }
+            $HitDate = $this->current()->isBetween($From, $To);
         }
         return $HitDate;
     }

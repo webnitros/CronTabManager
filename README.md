@@ -1,7 +1,3 @@
-http://oauth2.bustep.ru/oauth2/auth?response_type=code&client_id=12345697&redirect_uri=https%3A%2F%2Fms.fandeco.ru%2F%3Fhauth.done%3DFandeco&scope=&state=HA-RAFLTV63WNXUYJGMCB1ODHP78Q9420ZKSE5I
-
-
-
 
 # CronTabManager
 
