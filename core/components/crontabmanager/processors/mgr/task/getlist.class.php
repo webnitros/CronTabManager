@@ -114,6 +114,8 @@ class CronTabManagerTaskGetListProcessor extends modObjectGetListProcessor
         );
 
 
+        $array['path_task_cli'] = $object->getPathCli();
+
         $array['lock'] = $object->isLockFile();
         $array['is_blocked_time'] = $object->isBlockUpTask();
         $array['time'] = implode(' ', $time);
@@ -177,16 +179,16 @@ class CronTabManagerTaskGetListProcessor extends modObjectGetListProcessor
             );
         }
 
-
-        // Remove
+        // readLog
         $array['actions'][] = array(
             'cls' => '',
-            'icon' => 'icon icon-trash-o action-red',
-            'title' => $this->modx->lexicon('crontabmanager_task_remove'),
-            'action' => 'removeItem',
+            'icon' => 'icon icon-copy',
+            'title' => $this->modx->lexicon('crontabmanager_task_copyTask'),
+            'action' => 'copyPathTask',
             'button' => false,
             'menu' => true,
         );
+
 
         $array['actions'][] = '-';
         // unlock
@@ -201,10 +203,17 @@ class CronTabManagerTaskGetListProcessor extends modObjectGetListProcessor
             );
         }
 
+        // Remove
+        $array['actions'][] = array(
+            'cls' => '',
+            'icon' => 'icon icon-trash-o action-red',
+            'title' => $this->modx->lexicon('crontabmanager_task_remove'),
+            'action' => 'removeItem',
+            'button' => false,
+            'menu' => true,
+        );
 
 
-        // readLog
-        $path = $object->getFileLogPath();
         if (file_exists($path)) {
             $array['actions'][] = '-';
             $array['actions'][] = array(
@@ -223,17 +232,19 @@ class CronTabManagerTaskGetListProcessor extends modObjectGetListProcessor
                 'button' => false,
                 'menu' => true,
             );
+
+
         }
 
 
-       /* $array['actions'][] = array(
-            'cls' => '',
-            'icon' => 'icon icon-stop',
-            'title' => $this->modx->lexicon('crontabmanager_task_manualstop'),
-            'action' => 'manualStopTask',
-            'button' => false,
-            'menu' => true,
-        );*/
+        /* $array['actions'][] = array(
+             'cls' => '',
+             'icon' => 'icon icon-stop',
+             'title' => $this->modx->lexicon('crontabmanager_task_manualstop'),
+             'action' => 'manualStopTask',
+             'button' => false,
+             'menu' => true,
+         );*/
 
 
         return $array;

@@ -36,6 +36,9 @@ class SchedulerService
     /* @var CronTabManagerTask $CronTabManagerTask */
     public $CronTabManagerTask = null;
 
+    /* @var boolean $defaultModeDevelop - запись информациюю о включеном режиме разработке */
+    public $defaultModeDevelop = false;
+
     /** @var int|string $requestPrimaryKey The primary key requested on the object/id route */
     public $requestPrimaryKey;
 
@@ -120,6 +123,12 @@ class SchedulerService
                                 }
                             }
 
+                            $this->defaultModeDevelop = $task->get('mode_develop');
+
+                            // Добавить указатель что запуск в режиме dev
+                            if ($this->getArg('develop')) {
+                                $task->set('mode_develop', true);
+                            }
 
                             $this->runProcess($task, $method, $unLock, $controller);
                         }
@@ -224,6 +233,7 @@ class SchedulerService
         }
 
         if ($this->isSetCompletionTime) {
+            $task->set('mode_develop', $this->defaultModeDevelop);
             $task->start();
         }
 
@@ -234,6 +244,7 @@ class SchedulerService
 
         // 3. Остановка задания
         if ($this->isSetCompletionTime) {
+            $task->set('mode_develop', $this->defaultModeDevelop);
             $task->end();
         }
 
@@ -545,11 +556,20 @@ class SchedulerService
     public function setArgs($args)
     {
         if (!empty($args)) {
+            $config = [
+                'develop' => 'd',
+            ];
+            $CLiArgs = new \CliArgs\CliArgs($config);
+            $tmp = $CLiArgs->getArgs();
             $args = array_slice($args, 1);
             $data = [];
             foreach ($args as $arg) {
                 list($key, $value) = explode('=', $arg);
                 $data[$key] = $value;
+            }
+
+            if (array_key_exists('d', $tmp)) {
+                $data['develop'] = true;
             }
             $this->_args = $data;
         }

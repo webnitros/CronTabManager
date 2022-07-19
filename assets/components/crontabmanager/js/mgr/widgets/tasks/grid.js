@@ -40,7 +40,7 @@ CronTabManager.grid.Tasks = function (config) {
 Ext.extend(CronTabManager.grid.Tasks, CronTabManager.grid.Default, {
 
     getFields: function (config) {
-        return ['id', 'description', 'message', 'createdon', 'completed', 'updatedon', 'add_output_email', 'mode_develop', 'status', 'is_blocked_time', 'is_blocked', 'max_number_attempts', 'parent', 'time', 'path_task', 'last_run', 'category_name', 'end_run', 'active', 'actions']
+        return ['id', 'description', 'path_task_cli',  'message', 'createdon', 'completed', 'updatedon', 'add_output_email', 'mode_develop', 'status', 'is_blocked_time', 'is_blocked', 'max_number_attempts', 'parent', 'time', 'path_task', 'last_run', 'category_name', 'end_run', 'active', 'actions']
     },
 
     getColumns: function (config) {
@@ -177,7 +177,7 @@ Ext.extend(CronTabManager.grid.Tasks, CronTabManager.grid.Default, {
                     }
                 }
             },
-             {
+            {
                 text: '<i class="icon icon-eye"></i>&nbsp;' + _('crontabmanager_show_crontabs') + ' <small>(' + _('crontabmanager_time_server') + ': ' + CronTabManager.config.time_server + ')</small>',
                 handler: this.ShowCrontabs,
                 scope: this,
@@ -214,7 +214,6 @@ Ext.extend(CronTabManager.grid.Tasks, CronTabManager.grid.Default, {
         s.baseParams.active = checked ? 1 : 0
         this.getBottomToolbar().changePage(1)
     },
-
 
     fireParent: function (checkbox, value) {
         var s = this.getStore()
@@ -338,18 +337,16 @@ Ext.extend(CronTabManager.grid.Tasks, CronTabManager.grid.Default, {
     },
     runTaskWindow: function () {
 
-        var connector_args = '';
-        var $inputArgs = document.getElementById('crontabmanager_connector_args');
+        var connector_args = ''
+        var $inputArgs = document.getElementById('crontabmanager_connector_args')
         if ($inputArgs) {
-            connector_args = $inputArgs.value;
+            connector_args = $inputArgs.value
         }
 
         if (this.win !== null) {
             this.win.destroy()
         }
         this.elementLog = false
-
-
 
         this.win = new Ext.Window({
             id: this.config.id + 'runtask'
@@ -358,7 +355,7 @@ Ext.extend(CronTabManager.grid.Tasks, CronTabManager.grid.Default, {
             , height: 450
             , layout: 'fit'
             , autoLoad: {
-                url: CronTabManager.config['connector_cron_url'] + '?path_task=' + this.menu.record.path_task + '&scheduler_path=' + CronTabManager.config.schedulerPath + '&connector_base_path_url=' + CronTabManager.config.schedulerPath+ '&connector_args=' + connector_args,
+                url: CronTabManager.config['connector_cron_url'] + '?path_task=' + this.menu.record.path_task + '&scheduler_path=' + CronTabManager.config.schedulerPath + '&connector_base_path_url=' + CronTabManager.config.schedulerPath + '&connector_args=' + connector_args,
                 scripts: true
             }
         })
@@ -393,22 +390,20 @@ Ext.extend(CronTabManager.grid.Tasks, CronTabManager.grid.Default, {
         this.readLogFileBody(this.menu.record)
     },
 
-    elementLog:  false,
+    elementLog: false,
     readLogFileBody: function (record) {
 
         if (!this.elementLog) {
-            var $win = this.win;
-            var wrapper = document.createElement("div")
-            wrapper.setAttribute("id", 'crontabmanager_area_reading')
+            var $win = this.win
+            var wrapper = document.createElement('div')
+            wrapper.setAttribute('id', 'crontabmanager_area_reading')
             $win.body.dom.appendChild(wrapper)
-
 
             this.elementLog = true
         }
 
         //<div class="loading-indicator">Loading...</div>
         this.setLogFile('<div class="loading-indicator">Loading...</div>')
-
 
         MODx.Ajax.request({
             url: CronTabManager.config['connector_url'],
@@ -429,9 +424,31 @@ Ext.extend(CronTabManager.grid.Tasks, CronTabManager.grid.Default, {
 
     },
 
-    setLogFile: function (content){
+    setLogFile: function (content) {
         var area = document.getElementById('crontabmanager_area_reading')
-        area.innerHTML = '<hr>'+content
+        area.innerHTML = '<hr>' + content
+    },
+
+    copyPathTask: function (btn, e, row) {
+        if (typeof (row) != 'undefined') {
+            this.menu.record = row.data
+        } else if (!this.menu.record) {
+            return false
+        }
+
+        this.menu.record.path_task_cli
+        var area = document.createElement('textarea')
+        document.body.appendChild(area)
+        area.value = this.menu.record.path_task_cli
+        area.select()
+        document.execCommand('copy')
+        document.body.removeChild(area)
+
+        MODx.msg.status({
+            title: _('success')
+            , message: _('crontabmanager_task_copyTask_success')
+        })
+
     }
 
 })

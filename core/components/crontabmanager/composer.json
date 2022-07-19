@@ -12,6 +12,12 @@
         }
     ],
     "require": {
-        "nesbot/carbon": "^1.0.0"
+        "nesbot/carbon": "^1.0.0",
+        "cheprasov/php-cli-args": "^3.0"
+    },
+    "config": {
+        "allow-plugins": {
+            "kylekatarnls/update-helper": true
+        }
     }
 }

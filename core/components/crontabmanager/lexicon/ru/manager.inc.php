@@ -85,6 +85,8 @@ $_lang['crontabmanager_task_err_ae_controller'] = 'Не удалось найт�
 $_lang['crontabmanager_task_year_err_ae_controller'] = 'Не удалось найти файл контроллера по указанному пути: [[+controller]]. Вы используете собственный путь к контроллеру по этому нужно добавить абсолютный путь до файла';
 $_lang['crontabmanager_task_removeLog'] = 'Удалить лог файл crontab';
 $_lang['crontabmanager_task_removelog_confirm'] = 'Вы уверены что хотите удалить лог файл crontab?';
+$_lang['crontabmanager_task_copyTask'] = 'Скопировать путь CLI';
+$_lang['crontabmanager_task_copyTask_success'] = 'Путь успешно скопирован';
 $_lang['crontabmanager_time_server'] = 'Время на сервере';
 
 

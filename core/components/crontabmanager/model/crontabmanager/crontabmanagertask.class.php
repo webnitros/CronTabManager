@@ -285,7 +285,16 @@ class CronTabManagerTask extends xPDOSimpleObject
         }
     }
 
-
+    /**
+     * Путь для запуска в ручную
+     * @return string
+     */
+    public function getPathCli()
+    {
+        $path = $this->getOption('crontabmanager_php_command') . ' ' . $this->getOption('crontabmanager_link_path') . '/' . $this->get('path_task');
+        return $path;
+    }
+    
     /* @var null|false|CronTabManagerCategory $category */
     protected $category = null;
 

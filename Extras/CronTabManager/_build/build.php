@@ -52,10 +52,10 @@ class CronTabManagerPackage
         $this->modx->setLogTarget($this->config['log_target']);
 
 
-        if (!$this->modx->getAuthenticatedUser('mgr')) {
-            echo 'Access closed' . PHP_EOL;
-            die('You can download or buy the application in <a href="https://modstore.pro/">modstore.pro</a>');
-        }
+        #if (!$this->modx->getAuthenticatedUser('mgr')) {
+         #   echo 'Access closed' . PHP_EOL;
+        #    die('You can download or buy the application in <a href="https://modstore.pro/">modstore.pro</a>');
+        #}
 
         $this->initialize();
     }
